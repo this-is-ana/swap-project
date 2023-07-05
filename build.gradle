@@ -1,8 +1,23 @@
+<<<<<<< HEAD
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript{
+    ext {
+    sdkVersion = 33
+    // You can also create properties to specify versions for dependencies.
+    // Having consistent versions between modules can avoid conflicts with behavior.
+    appcompatVersion = "1.6.1"
+    }
+    dependencies {
+        classpath 'com.google.gms:google-services:4.3.15'
+    }
+}
+=======
 buildscript {
     dependencies {
         classpath 'com.google.gms:google-services:4.3.15'
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
+>>>>>>> main
 
 plugins {
     id 'com.android.application' version '8.0.1' apply false
