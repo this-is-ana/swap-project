@@ -10,14 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import edu.anayika.swapproject.theme.SwapProject_Theme
+import edu.anayika.swapproject.ui.theme.SwapProjectTheme
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SwapProject_Theme {
+            SwapProjectTheme {
                 MyApp()
             }
         }
@@ -29,7 +29,6 @@ fun MyApp() {
     val navController = rememberNavController()
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
-            AppTopBar(navController = navController, showBackButton = false)
             AppNavHost(navController = navController)
         }
     }
@@ -38,5 +37,7 @@ fun MyApp() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    MyApp()
+    SwapProjectTheme {
+        MyApp()
+    }
 }

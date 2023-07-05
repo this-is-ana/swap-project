@@ -1,4 +1,4 @@
-package edu.anayika.swapproject.theme
+package edu.anayika.swapproject.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -69,7 +69,7 @@ val DarkColorScheme = darkColorScheme(
 
 @JvmOverloads
 @Composable
-fun SwapProject_Theme(
+fun SwapProjectTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,

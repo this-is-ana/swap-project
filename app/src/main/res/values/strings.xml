@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Swap Project</string>
+    <string name="title_activity_user_session">UserSession</string>
 </resources>

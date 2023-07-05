@@ -13,8 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.anayika.swapproject.ui.theme.SwapProjectTheme
 
-class CreateAccountActivity: ComponentActivity() {
-
+class UserSessionActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -26,18 +25,19 @@ class CreateAccountActivity: ComponentActivity() {
     }
 }
 @Composable
-fun CreateAccount(navController: NavController) {
-    val context = LocalContext.current
-    Column(modifier = Modifier.fillMaxSize()) {
-        AppTopBar(navController = navController, showBackButton = true)
-        NewAccountForm(navController = navController)
-    }
+fun UserSession(navController: NavController) {
+        val context = LocalContext.current
+        Column(modifier = Modifier.fillMaxSize()) {
+            AppTopBar(navController = navController, showBackButton = false)
+            UserSessionView(navController = navController)
+        }
 }
+
 
 @Preview(showBackground = true)
 @Composable
-fun CreateAccountPreview(navController: NavController = rememberNavController()) {
+fun ShowUserSessionPreview(navController: NavController = rememberNavController()) {
     SwapProjectTheme {
-        CreateAccount(navController)
+        UserSession(navController)
     }
 }

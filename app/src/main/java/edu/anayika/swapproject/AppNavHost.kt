@@ -13,12 +13,8 @@ fun AppNavHost(navController: NavHostController = rememberNavController(),
                startDestination: String = "login") {
     NavHost(modifier = Modifier, navController = navController,
         startDestination = startDestination) {
-        composable("login") { Login(navController = navController) }
-        composable("createAccount") { CreateAccountActivity(navController = navController) }
+        composable("login") { Login(navController) }
+        composable("createAccount") { CreateAccount(navController)}
+        composable("userSession") { UserSession(navController)}
     }
-}
-
-@Composable
-fun CreateAccountActivity(navController: NavHostController) {
-    // Composable implementation
 }
