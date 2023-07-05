@@ -95,7 +95,6 @@ fun AppLogo() {
         )
     }
 }
-
 @Composable
 fun MenuButton() {
     Box(
