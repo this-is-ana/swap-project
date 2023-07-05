@@ -2,6 +2,7 @@ package edu.anayika.swapproject
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,7 +30,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun AppTopBar(navController: NavController, showBackButton: Boolean) {
+fun AppTopBar(navController: NavController, showBackButton: Boolean, showAddChalet: Boolean) {
     TopAppBar(
         backgroundColor = MaterialTheme.colorScheme.background,
         elevation = 0.dp,
@@ -48,6 +49,9 @@ fun AppTopBar(navController: NavController, showBackButton: Boolean) {
                 contentAlignment = Alignment.CenterEnd
             ) {
                 MenuButton()
+                if (showAddChalet) {
+                    AddChaletButton()
+                }
             }
         }
     }
@@ -108,9 +112,24 @@ fun MenuButton() {
         )
     }
 }
-
+@Composable
+fun AddChaletButton( ) {
+    Box(
+        modifier = Modifier
+            .fillMaxHeight()
+            .padding(end = 16.dp),
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        Text(
+            text = "Ajouter un nouveau chalet",
+            style = androidx.compose.material.MaterialTheme.typography.subtitle2,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.clickable { /* Handle click event */ }
+        )
+    }
+}
 @Preview(name = "AppTopBar")
 @Composable
 private fun AppTopBarPreview() {
-    AppTopBar(navController = rememberNavController(), showBackButton = true)
+    AppTopBar(navController = rememberNavController(), showBackButton = true, showAddChalet = false)
 }

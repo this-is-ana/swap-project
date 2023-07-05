@@ -29,7 +29,7 @@ class CreateAccountActivity: ComponentActivity() {
 fun CreateAccount(navController: NavController) {
     val context = LocalContext.current
     Column(modifier = Modifier.fillMaxSize()) {
-        AppTopBar(navController = navController, showBackButton = true)
+        AppTopBar(navController = navController, showBackButton = true, showAddChalet = false)
         NewAccountForm(navController = navController)
     }
 }

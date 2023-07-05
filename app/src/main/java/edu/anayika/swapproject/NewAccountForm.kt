@@ -31,7 +31,6 @@ fun NewAccountForm(navController: NavController) {
     val passwordConfirmation = remember { mutableStateOf("") }
     val firstName = remember { mutableStateOf("") }
     val lastName = remember { mutableStateOf("") }
-    val address = remember { mutableStateOf("") }
     val phone = remember { mutableStateOf("") }
 
     Surface(modifier = Modifier.fillMaxSize()) {
@@ -74,11 +73,6 @@ fun NewAccountForm(navController: NavController) {
                         label = "Last Name",
                         value = lastName.value,
                         onValueChange = { lastName.value = it })
-                    Spacer(modifier = Modifier.height(8.dp))
-                    TextFieldWithLabel(
-                        label = "Address",
-                        value = address.value,
-                        onValueChange = { address.value = it })
                     Spacer(modifier = Modifier.height(8.dp))
                     TextFieldWithLabel(
                         label = "Phone",

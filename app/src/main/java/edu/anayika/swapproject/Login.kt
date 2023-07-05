@@ -33,7 +33,7 @@ import androidx.navigation.compose.rememberNavController
 fun Login(navController: NavController) {
     val context = LocalContext.current
     Column(modifier = Modifier.fillMaxSize()) {
-        AppTopBar(navController = navController, showBackButton = false)
+        AppTopBar(navController = navController, showBackButton = false, showAddChalet = false)
         LoginForm(navController = navController)
     }
 }

@@ -28,7 +28,7 @@ class UserSessionActivity : ComponentActivity() {
 fun UserSession(navController: NavController) {
         val context = LocalContext.current
         Column(modifier = Modifier.fillMaxSize()) {
-            AppTopBar(navController = navController, showBackButton = false)
+            AppTopBar(navController = navController, showBackButton = false, showAddChalet = true )
             UserSessionView(navController = navController)
         }
 }
