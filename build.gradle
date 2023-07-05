@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript{
     ext {
@@ -10,6 +11,13 @@ buildscript{
         classpath 'com.google.gms:google-services:4.3.15'
     }
 }
+=======
+buildscript {
+    dependencies {
+        classpath 'com.google.gms:google-services:4.3.15'
+    }
+}// Top-level build file where you can add configuration options common to all sub-projects/modules.
+>>>>>>> main
 
 plugins {
     id 'com.android.application' version '8.0.1' apply false
