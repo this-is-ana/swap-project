@@ -1,4 +1,4 @@
-package edu.anayika.swapproject
+package edu.anayika.swapproject.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,7 +33,7 @@ import androidx.navigation.compose.rememberNavController
 fun Login(navController: NavController) {
     val context = LocalContext.current
     Column(modifier = Modifier.fillMaxSize()) {
-        AppTopBar(navController = navController, showBackButton = false, showAddChalet = false)
+        AppTopBar(navController = navController, showBackButton = false)
         LoginForm(navController = navController)
     }
 }
@@ -78,8 +78,8 @@ fun LoginForm(navController: NavController) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.primary),
-                    onClick = { /* Handle login logic here */ }
-                ) {
+                    onClick = { navController.navigate("userSession")/* Handle login logic here */ }
+                        ) {
                     Text(
                         text = "Log in",
                         color = androidx.compose.material3.MaterialTheme.colorScheme.onTertiary,

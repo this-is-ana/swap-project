@@ -1,4 +1,4 @@
-package edu.anayika.swapproject
+package edu.anayika.swapproject.composables
 
 
 import androidx.compose.foundation.background
@@ -22,8 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -34,6 +32,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.foundation.Image
 import coil.compose.rememberImagePainter
+import edu.anayika.swapproject.R
 
 
 @Composable

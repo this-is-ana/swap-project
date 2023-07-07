@@ -1,4 +1,4 @@
-package edu.anayika.swapproject
+package edu.anayika.swapproject.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,33 +11,37 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.anayika.swapproject.models.UserProfileViewModel
+import edu.anayika.swapproject.composables.AppNavHost
+import edu.anayika.swapproject.composables.AppTopBar
+import edu.anayika.swapproject.composables.NewAccountForm
 import edu.anayika.swapproject.ui.theme.SwapProjectTheme
 
-class UserSessionActivity : ComponentActivity() {
+class CreateAccountActivity: ComponentActivity() {
+    private val viewModel = UserProfileViewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             SwapProjectTheme {
                 val navController = rememberNavController()
-                AppNavHost(navController = navController)
+                AppNavHost(navController = navController, viewModel = viewModel)
             }
         }
     }
 }
 @Composable
-fun UserSession(navController: NavController) {
-        val context = LocalContext.current
-        Column(modifier = Modifier.fillMaxSize()) {
-            AppTopBar(navController = navController, showBackButton = false, showAddChalet = true )
-            UserSessionView(navController = navController)
-        }
+fun CreateAccount(navController: NavController) {
+    val context = LocalContext.current
+    Column(modifier = Modifier.fillMaxSize()) {
+        AppTopBar(navController = navController, showBackButton = true)
+        NewAccountForm(navController = navController)
+    }
 }
-
 
 @Preview(showBackground = true)
 @Composable
-fun ShowUserSessionPreview(navController: NavController = rememberNavController()) {
+fun CreateAccountPreview(navController: NavController = rememberNavController()) {
     SwapProjectTheme {
-        UserSession(navController)
+        CreateAccount(navController)
     }
 }
