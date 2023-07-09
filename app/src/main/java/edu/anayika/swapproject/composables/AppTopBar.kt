@@ -1,6 +1,5 @@
-package edu.anayika.swapproject
+package edu.anayika.swapproject.composables
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -23,14 +22,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.anayika.swapproject.R
 
 @Composable
-fun AppTopBar(navController: NavController, showBackButton: Boolean, showAddChalet: Boolean) {
+fun AppTopBar(navController: NavController, showBackButton: Boolean) {
     TopAppBar(
         backgroundColor = MaterialTheme.colorScheme.background,
         elevation = 0.dp,
@@ -49,13 +47,11 @@ fun AppTopBar(navController: NavController, showBackButton: Boolean, showAddChal
                 contentAlignment = Alignment.CenterEnd
             ) {
                 MenuButton()
-                if (showAddChalet) {
-                    AddChaletButton()
                 }
             }
         }
     }
-}
+
 
 @Composable
 fun AppLogoWithTitle() {
@@ -112,7 +108,7 @@ fun MenuButton() {
     }
 }
 @Composable
-fun AddChaletButton( ) {
+fun AddChaletButton() {
     Box(
         modifier = Modifier
             .fillMaxHeight()
@@ -130,5 +126,5 @@ fun AddChaletButton( ) {
 @Preview(name = "AppTopBar")
 @Composable
 private fun AppTopBarPreview() {
-    AppTopBar(navController = rememberNavController(), showBackButton = true, showAddChalet = false)
+    AppTopBar(navController = rememberNavController(), showBackButton = true)
 }

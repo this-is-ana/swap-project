@@ -1,4 +1,4 @@
-package edu.anayika.swapproject
+package edu.anayika.swapproject.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -80,7 +80,7 @@ fun NewAccountForm(navController: NavController) {
                         onValueChange = { phone.value = it })
                     Spacer(modifier = Modifier.height(12.dp))
                     Button(
-                        onClick = { navController.navigate("userSession") },
+                        onClick = { navController.navigate("userProfileAccount") },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text(text = "Create Account")
