@@ -1,23 +1,30 @@
 package edu.anayika.swapproject.data
 
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 class DatabaseHelper {
     private val db = Firebase.firestore
+    private val collectionUsers = "users"
 
     fun createUser(user: User) {
-        db.collection("users").add(user)
+        db.collection(collectionUsers).add(user)
     }
 
     fun updateUser() {}
 
     fun readUsers() {}
 
-    fun readUser() {}
+    fun readUser(email: String) : DocumentSnapshot? {
+        var response = db.collection(collectionUsers).document(email).get()
+
+        return if(response.isSuccessful) {
+            response.result
+        } else {
+            null
+        }
+    }
 
     fun deleteUser() {}
 

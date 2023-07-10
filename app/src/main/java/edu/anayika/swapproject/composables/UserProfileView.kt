@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material.Text
@@ -16,7 +14,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +39,7 @@ fun UserProfileView(
 
         Column(modifier = Modifier.fillMaxHeight()) {
                 val userProfile by viewModel.userProfile.collectAsState()
+
                 Column (
                     modifier = Modifier
                         .padding(16.dp)
@@ -71,10 +69,6 @@ fun UserProfileView(
                     }
                 }
             }
-
-
-
-
 
 @Preview(name = "UserProfileView")
 @Composable

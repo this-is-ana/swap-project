@@ -1,5 +1,6 @@
 package edu.anayika.swapproject.composables
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,8 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-
+import edu.anayika.swapproject.models.Authentication
 
 @Composable
 fun Login(navController: NavController) {
@@ -40,6 +43,8 @@ fun Login(navController: NavController) {
 @Composable
 fun LoginForm(navController: NavController) {
     val context = LocalContext.current
+    val email = remember { mutableStateOf("") }
+    val password = remember { mutableStateOf("") }
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -57,20 +62,20 @@ fun LoginForm(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
-                value = "",
-                onValueChange = { },
+                value = email.value,
+                onValueChange = { email.value = it },
                 label = { Text("Email") },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
-                value = "",
-                onValueChange = { },
+                value = password.value,
+                onValueChange = { password.value = it },
                 label = { Text("Password") },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(16.dp))
-            androidx.compose.material3.Surface(
+            Surface(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -78,7 +83,23 @@ fun LoginForm(navController: NavController) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.primary),
-                    onClick = { navController.navigate("userSession")/* Handle login logic here */ }
+                    onClick = {
+                        val currentUser = Authentication().signIn(email.value, password.value)
+                        val errorMessage = Toast.makeText(
+                            context,
+                            "Courriel ou mot de passe invalide",
+                            Toast.LENGTH_SHORT)
+
+                        if (currentUser != null) {
+                            if(currentUser.email == email.value) {
+                                navController.navigate("userSession")
+                            } else {
+                                errorMessage.show()
+                            }
+                        } else {
+                            errorMessage.show()
+                        }
+                    }
                         ) {
                     Text(
                         text = "Log in",
@@ -117,6 +138,7 @@ fun LoginForm(navController: NavController) {
         }
     }
 }
+
 @Preview(name = "Login")
 @Composable
 private fun PreviewLogin() {
