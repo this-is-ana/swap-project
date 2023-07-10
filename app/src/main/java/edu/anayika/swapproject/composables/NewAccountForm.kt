@@ -97,7 +97,7 @@ fun NewAccountForm(navController: NavController) {
 
                             Authentication().createAccount(email.value, password.value)
 
-                            navController.navigate("userProfileAccount")
+                            navController.navigate("userSession")
                         },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
@@ -108,7 +108,6 @@ fun NewAccountForm(navController: NavController) {
         }
     }
 }
-
 
 @Composable
 fun TextFieldWithLabel(label: String, value: String, onValueChange: (String) -> Unit) {
