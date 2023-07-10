@@ -7,5 +7,4 @@ class User(
     var lastName: String,
     var phone: String,
     var userType: UserType,
-    var userAddress: Address
 )

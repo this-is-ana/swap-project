@@ -23,6 +23,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.anayika.swapproject.data.DatabaseHelper
+import edu.anayika.swapproject.data.User
+import edu.anayika.swapproject.data.UserType
+import edu.anayika.swapproject.models.Authentication
 
 @Composable
 fun NewAccountForm(navController: NavController) {
@@ -80,7 +84,21 @@ fun NewAccountForm(navController: NavController) {
                         onValueChange = { phone.value = it })
                     Spacer(modifier = Modifier.height(12.dp))
                     Button(
-                        onClick = { navController.navigate("userProfileAccount") },
+                        onClick = {
+                            val user = User(
+                                email.value,
+                                password.value,
+                                firstName.value,
+                                lastName.value,
+                                phone.value,
+                                UserType.REGULAR)
+
+                            DatabaseHelper().createUser(user)
+
+                            Authentication().createAccount(email.value, password.value)
+
+                            navController.navigate("userProfileAccount")
+                        },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text(text = "Create Account")

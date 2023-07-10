@@ -15,9 +15,9 @@ import edu.anayika.swapproject.composables.AppNavHost
 import edu.anayika.swapproject.ui.theme.SwapProjectTheme
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             SwapProjectTheme {
                 MyApp()
