@@ -1,5 +1,6 @@
 package edu.anayika.swapproject.composables
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -28,6 +29,12 @@ import edu.anayika.swapproject.data.User
 import edu.anayika.swapproject.data.UserType
 import edu.anayika.swapproject.models.Authentication
 
+import edu.anayika.swapproject.utils.isUserInputsValid
+import edu.anayika.swapproject.utils.showErrorMessage
+
+
+
+
 @Composable
 fun NewAccountForm(navController: NavController) {
     val email = remember { mutableStateOf("") }
@@ -36,7 +43,7 @@ fun NewAccountForm(navController: NavController) {
     val firstName = remember { mutableStateOf("") }
     val lastName = remember { mutableStateOf("") }
     val phone = remember { mutableStateOf("") }
-
+    var errMsg: String
     Surface(modifier = Modifier.fillMaxSize()) {
         val context = LocalContext.current
         LazyColumn(modifier = Modifier.fillMaxHeight()) {
@@ -85,20 +92,20 @@ fun NewAccountForm(navController: NavController) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Button(
                         onClick = {
-                            val user = User(
+                            if(password.value == passwordConfirmation.value){
+                            val userInputs = User(
                                 email.value,
                                 password.value,
                                 firstName.value,
                                 lastName.value,
                                 phone.value,
                                 UserType.REGULAR)
-
-                            DatabaseHelper().createUser(user)
-
-                            Authentication().createAccount(email.value, password.value)
-
-                            navController.navigate("userProfileAccount")
-                        },
+                                createUser(userInputs, navController, context)
+                            } else {
+                                errMsg = "Les Mots de passe ne sont pas correpondantes "
+                                showErrorMessage(errMsg, context)
+                            }
+                                  },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text(text = "Create Account")
@@ -109,6 +116,24 @@ fun NewAccountForm(navController: NavController) {
     }
 }
 
+fun createUser(userInputs: User, navController: NavController, context: Context) {
+    if(isUserInputsValid(userInputs, navController, context)){
+            val user = User(
+                userInputs.email,
+                userInputs.password,
+                userInputs.firstName,
+                userInputs.lastName,
+                userInputs.phone,
+                UserType.REGULAR
+            )
+            DatabaseHelper().createUser(user)
+            Authentication().createAccount(user.email, user.password)
+            navController.navigate("userSession")
+    } else {
+        val errMsg = "Les Mots de passe ne sont pas correpondantes "
+        showErrorMessage(errMsg, context)
+    }
+}
 
 @Composable
 fun TextFieldWithLabel(label: String, value: String, onValueChange: (String) -> Unit) {
@@ -126,7 +151,7 @@ fun TextFieldWithLabel(label: String, value: String, onValueChange: (String) -> 
     }
 }
 
-@Preview(name = "NewAccountForm(")
+@Preview(name = "NewAccountForm")
 @Composable
 private fun NewAccountFormPreview() {
     NewAccountForm(navController = rememberNavController())

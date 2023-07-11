@@ -1,12 +1,14 @@
 package edu.anayika.swapproject.composables
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -14,21 +16,34 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
-
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.anayika.swapproject.R
+import edu.anayika.swapproject.data.CurrentActivity
+
 
 @Composable
-fun AppTopBar(navController: NavController, showBackButton: Boolean) {
+fun AppTopBar(navController: NavController,
+              showBackButton: Boolean,
+              currentActivity: CurrentActivity
+) {
+    val dropdownItems = getDropDownItems(currentActivity)
+
     TopAppBar(
         backgroundColor = MaterialTheme.colorScheme.background,
         elevation = 0.dp,
@@ -46,12 +61,84 @@ fun AppTopBar(navController: NavController, showBackButton: Boolean) {
                 modifier = Modifier.weight(1f),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                MenuButton()
-                }
+                DropDownMenuButton(navController,dropdownItems)
             }
         }
     }
+}
 
+@Composable
+fun getDropDownItems(currentActivity: CurrentActivity): List<String> {
+    return when (currentActivity) {
+        CurrentActivity.MainActivity, CurrentActivity.CreateAccountActivity -> {
+            listOf("Contactez-nous")
+        }
+        else -> {
+            listOf(
+                "Mon Profil",
+                "Rechercher Chalets",
+                "Mes chalets favoris",
+                "Mes correspondances",
+                "Quitter la Session",
+                "Contactez-nous"
+            )
+        }
+    }
+}
+
+@Composable
+fun DropDownMenuButton(navController: NavController, dropdownItems: List<String>) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxHeight()
+            .padding(end = 16.dp),
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        IconButton(onClick = { expanded = true }) {
+            Icon(
+                imageVector = Icons.Filled.Menu,
+                contentDescription = "menu",
+                modifier = Modifier.fillMaxHeight(),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            dropdownItems.forEach { item ->
+                DropdownItem(item, navController)
+            }
+        }
+    }
+}
+
+@Composable
+fun DropdownItem(item: String, navController: NavController) {
+    val context = LocalContext.current
+    DropdownMenuItem(onClick = {
+        when (item) {
+            "Mon Profil" -> navController.navigate("userProfileAccount")
+            "Rechercher Chalets" -> navController.navigate("searchChalets")
+            "Mes chalets favoris" -> navController.navigate("favoriteChalets")
+            "Mes correspondances" -> navController.navigate("myCorrespondences")
+            "Quitter la Session" -> navController.navigate("logout")
+            "Contactez-nous" -> navController.navigate("contactUs")
+            else -> {
+                Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }) {
+        Text(
+            text = item,
+            textAlign = TextAlign.Center,
+            fontSize = 16.sp,
+            modifier = Modifier.padding(8.dp)
+        )
+    }
+}
 
 @Composable
 fun AppLogoWithTitle() {
@@ -91,22 +178,7 @@ fun AppLogo() {
         )
     }
 }
-@Composable
-fun MenuButton() {
-    Box(
-        modifier = Modifier
-            .fillMaxHeight()
-            .padding(end = 16.dp),
-        contentAlignment = Alignment.CenterEnd
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Menu,
-            contentDescription = null,
-            modifier = Modifier.fillMaxHeight(),
-            tint = MaterialTheme.colorScheme.primary
-        )
-    }
-}
+
 @Composable
 fun AddChaletButton() {
     Box(
@@ -126,5 +198,9 @@ fun AddChaletButton() {
 @Preview(name = "AppTopBar")
 @Composable
 private fun AppTopBarPreview() {
-    AppTopBar(navController = rememberNavController(), showBackButton = true)
+    val navController = rememberNavController()
+    val showBackButton = true
+    val currentActivity = CurrentActivity.MainActivity
+
+    AppTopBar(navController = navController, showBackButton = showBackButton, currentActivity = currentActivity)
 }

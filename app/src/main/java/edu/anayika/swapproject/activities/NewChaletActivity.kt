@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import edu.anayika.swapproject.data.Address
 import edu.anayika.swapproject.data.House
 import edu.anayika.swapproject.data.HouseStatus
+import edu.anayika.swapproject.data.CurrentActivity
 
 class NewChaletActivity : ComponentActivity() {
 
