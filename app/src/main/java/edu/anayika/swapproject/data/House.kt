@@ -1,9 +1,9 @@
 package edu.anayika.swapproject.data
 
 class House(
-    var size: String,
-    var features: Array<String>,
-    var amenities: Array<String>,
+    var capacity: Int,
+    var features: Features,
+    var amenities: Amenities,
     var description: String,
     var mainImage: String,
     var images: Array<String>,

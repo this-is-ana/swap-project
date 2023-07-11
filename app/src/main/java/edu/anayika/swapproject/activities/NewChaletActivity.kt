@@ -20,9 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import edu.anayika.swapproject.data.Address
+import edu.anayika.swapproject.data.Amenities
 import edu.anayika.swapproject.data.House
 import edu.anayika.swapproject.data.HouseStatus
 import edu.anayika.swapproject.data.CurrentActivity
+import edu.anayika.swapproject.data.Features
 
 class NewChaletActivity : ComponentActivity() {
 
@@ -39,9 +41,9 @@ class NewChaletActivity : ComponentActivity() {
 @Composable
 fun NewChaletForm(navController: NavHostController) {
     val chalet = House(
-        size = "",
-        features = emptyArray(),
-        amenities = emptyArray(),
+        capacity = 0,
+        features = Features(true, true, true, true, true, true),
+        amenities = Amenities(1,1,1, true, true, true, true, true, true, true, true, true),
         description = "",
         mainImage = "",
         images = emptyArray(),
@@ -52,8 +54,8 @@ fun NewChaletForm(navController: NavHostController) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Add a new Chalet to your account:")
         OutlinedTextField(
-            value = TextFieldValue(chalet.size),
-            onValueChange = { chalet.size = it.text },
+            value = TextFieldValue(chalet.capacity.toString()),
+            onValueChange = { chalet.capacity = it.text.toInt() },
             label = { Text("Size") },
             modifier = Modifier.fillMaxWidth()
         )

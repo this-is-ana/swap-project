@@ -20,8 +20,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Firebase.auth.signOut()
-
         setContent {
             SwapProjectTheme {
                 MyApp()
