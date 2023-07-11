@@ -20,6 +20,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.anayika.swapproject.data.DatabaseHelper
+import edu.anayika.swapproject.data.User
+import edu.anayika.swapproject.data.UserType
+import edu.anayika.swapproject.models.Authentication
 import edu.anayika.swapproject.models.UserProfileViewModel
 
 @Composable
@@ -28,11 +32,34 @@ fun UserProfileView(
     viewModel: UserProfileViewModel,
     modifier: Modifier = Modifier
 ) {
+    val currentUserEmail = Authentication().getCurrentUser()?.email!!
     val email = remember { mutableStateOf("") }
     val firstName = remember { mutableStateOf("") }
     val lastName = remember { mutableStateOf("") }
     val phone = remember { mutableStateOf("") }
-    val userAddress = remember { mutableStateOf("") }
+    val userType = remember { mutableStateOf("") }
+    //val userAddress = remember { mutableStateOf("") }
+    lateinit var user: User
+
+    Thread.sleep(1000)
+
+    DatabaseHelper().readUser(currentUserEmail).addOnSuccessListener { results ->
+        for(result in results) {
+            user = User(
+                result.data["email"].toString(),
+                result.data["firstName"].toString(),
+                result.data["lastName"].toString(),
+                result.data["phone"].toString(),
+                UserType.REGULAR
+            )
+
+            email.value = user.email
+            firstName.value = user.firstName
+            lastName.value = user.lastName
+            phone.value = user.phone
+            userType.value = user.userType.toString()
+        }
+    }
 
     Surface(modifier = Modifier.fillMaxSize()) {
         val context = LocalContext.current
@@ -45,15 +72,14 @@ fun UserProfileView(
                         .padding(16.dp)
                         .fillMaxHeight()
                 ) {
-                    Text(text = "Name: John Doe")
-                    //REPLACE: Text(text = "Name: ${user.firstName} ${user.lastName}")
-                    Text(text = "Email: example@example.com")//REPLACE: Text(text = "Email: ${user.email}")
-                    Text(text = "Phone: 444-444-4444")//REPLACE: Text(text = "Phone: ${user.phone}")
-                    Text(text = "User Type: PREMIUM")//REPLACE: Text(text = "User Type: ${user.userType}")
+                    Text(text = "Name: ${firstName.value} ${lastName.value}")
+                    Text(text = "Email: ${email.value}")
+                    Text(text = "Phone: ${phone.value}")
+                    Text(text = "User Type: ${userType.value}")
                     //REPLACE: Text(text = "Address: ${it.address1}, ${it.address2}")
-                    Text(text = "City: Montreal, Province: Quebec")
+                    //Text(text = "City: Montreal, Province: Quebec")
                     //REPLACE: Text(text = "City: ${it.city}, Province: ${it.province}")
-                    Text(text = "Postal Code: A0A 0A0, Country: Canada")
+                    //Text(text = "Postal Code: A0A 0A0, Country: Canada")
                     //REPLACE: Text(text = "Postal Code: ${it.postalCode}, Country: ${it.country}")
 
                     Button(
