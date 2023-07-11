@@ -1,6 +1,6 @@
 package edu.anayika.swapproject.composables
 
-import android.widget.Toast
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +16,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,13 +31,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseUser
+import edu.anayika.swapproject.data.CurrentActivity
 import edu.anayika.swapproject.models.Authentication
+import edu.anayika.swapproject.utils.isValidEmail
+import edu.anayika.swapproject.utils.isValidPassword
+import edu.anayika.swapproject.utils.showErrorMessage
+
 
 @Composable
 fun Login(navController: NavController) {
-    val context = LocalContext.current
+    LocalContext.current
     Column(modifier = Modifier.fillMaxSize()) {
-        AppTopBar(navController = navController, showBackButton = false)
+        AppTopBar(navController = navController, showBackButton = false, currentActivity = CurrentActivity.MainActivity)
         LoginForm(navController = navController)
     }
 }
@@ -85,20 +92,7 @@ fun LoginForm(navController: NavController) {
                     colors = ButtonDefaults.buttonColors(backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.primary),
                     onClick = {
                         val currentUser = Authentication().signIn(email.value, password.value)
-                        val errorMessage = Toast.makeText(
-                            context,
-                            "Courriel ou mot de passe invalide",
-                            Toast.LENGTH_SHORT)
-
-                        if (currentUser != null) {
-                            if(currentUser.email == email.value) {
-                                navController.navigate("userSession")
-                            } else {
-                                errorMessage.show()
-                            }
-                        } else {
-                            errorMessage.show()
-                        }
+                        validateLoginInput(currentUser, context, navController, email, password)
                     }
                         ) {
                     Text(
@@ -138,6 +132,36 @@ fun LoginForm(navController: NavController) {
         }
     }
 }
+
+fun validateLoginInput(
+    currentUser: FirebaseUser?,
+    context: Context,
+    navController: NavController,
+    email: MutableState<String>,
+    password: MutableState<String>
+) {
+    var errMsg = "Courriel ou mot de passe invalide"
+    if (currentUser != null) {
+        if (isValidEmail(email.value)) {
+            if (isValidPassword(password.value)) {
+    //            if (password.value == currentUser.password) {
+                    navController.navigate("userSession")
+    //            } else {
+    //                showErrorMessage(errMsg, context)
+    //            }
+            } else {
+                errMsg = "Mot de passe doit avoir 6 characters"
+                showErrorMessage(errMsg, context)
+            }
+        } else {
+             errMsg = "Le courriel n'est pas valide"
+            showErrorMessage(errMsg, context)
+        }
+    } else {
+        showErrorMessage(errMsg, context)
+    }
+}
+
 
 @Preview(name = "Login")
 @Composable

@@ -16,6 +16,7 @@ import edu.anayika.swapproject.composables.AppNavHost
 import edu.anayika.swapproject.composables.AppTopBar
 import edu.anayika.swapproject.composables.UserSessionView
 import edu.anayika.swapproject.ui.theme.SwapProjectTheme
+import edu.anayika.swapproject.data.CurrentActivity
 
 class UserSessionActivity : ComponentActivity() {
     private val viewModel = UserProfileViewModel()
@@ -33,7 +34,7 @@ class UserSessionActivity : ComponentActivity() {
 fun UserSession(navController: NavController) {
         val context = LocalContext.current
         Column(modifier = Modifier.fillMaxSize()) {
-            AppTopBar(navController = navController, showBackButton = false)
+            AppTopBar(navController = navController, showBackButton = false, currentActivity = CurrentActivity.UserSectionActivity)
             UserSessionView(navController = navController)
         }
 }

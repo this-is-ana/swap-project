@@ -23,6 +23,7 @@ import edu.anayika.swapproject.composables.AppNavHost
 import edu.anayika.swapproject.composables.AppTopBar
 import edu.anayika.swapproject.composables.UserProfileView
 import edu.anayika.swapproject.ui.theme.SwapProjectTheme
+import edu.anayika.swapproject.data.CurrentActivity
 
 class UserProfileActivity : ComponentActivity() {
     private val viewModel = UserProfileViewModel()
@@ -40,7 +41,7 @@ class UserProfileActivity : ComponentActivity() {
 fun UserProfileAccount (navController: NavController, viewModel: UserProfileViewModel) {
     val context = LocalContext.current
     Column(modifier = Modifier.fillMaxSize()) {
-        AppTopBar(navController = navController, showBackButton = false)
+        AppTopBar(navController = navController, showBackButton = false, currentActivity = CurrentActivity.UserProfileActivity)
         LazyColumn(modifier = Modifier.fillMaxHeight()) {
             item {
                 Text(

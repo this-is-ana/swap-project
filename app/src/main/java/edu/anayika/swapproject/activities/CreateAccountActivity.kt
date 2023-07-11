@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import edu.anayika.swapproject.models.UserProfileViewModel
 import edu.anayika.swapproject.composables.AppNavHost
 import edu.anayika.swapproject.composables.AppTopBar
+import edu.anayika.swapproject.data.CurrentActivity
 import edu.anayika.swapproject.composables.NewAccountForm
 import edu.anayika.swapproject.ui.theme.SwapProjectTheme
 
@@ -33,7 +34,7 @@ class CreateAccountActivity: ComponentActivity() {
 fun CreateAccount(navController: NavController) {
     val context = LocalContext.current
     Column(modifier = Modifier.fillMaxSize()) {
-        AppTopBar(navController = navController, showBackButton = true)
+        AppTopBar(navController = navController, showBackButton = true, currentActivity = CurrentActivity.CreateAccountActivity)
         NewAccountForm(navController = navController)
     }
 }
