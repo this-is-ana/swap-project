@@ -95,17 +95,18 @@ fun NewAccountForm(navController: NavController) {
                             if(password.value == passwordConfirmation.value){
                             val userInputs = User(
                                 email.value,
-                                password.value,
                                 firstName.value,
                                 lastName.value,
                                 phone.value,
                                 UserType.REGULAR)
-                                createUser(userInputs, navController, context)
+
+                                createUser(userInputs, navController, context, password.value)
                             } else {
                                 errMsg = "Les Mots de passe ne sont pas correpondantes "
                                 showErrorMessage(errMsg, context)
                             }
                                   },
+
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text(text = "Create Account")
@@ -116,18 +117,20 @@ fun NewAccountForm(navController: NavController) {
     }
 }
 
-fun createUser(userInputs: User, navController: NavController, context: Context) {
+fun createUser(userInputs: User, navController: NavController, context: Context, password: String) {
     if(isUserInputsValid(userInputs, navController, context)){
             val user = User(
                 userInputs.email,
-                userInputs.password,
                 userInputs.firstName,
                 userInputs.lastName,
                 userInputs.phone,
                 UserType.REGULAR
             )
             DatabaseHelper().createUser(user)
-            Authentication().createAccount(user.email, user.password)
+            Authentication().createAccount(user.email, password)
+
+            Thread.sleep(1000)
+
             navController.navigate("userSession")
     } else {
         val errMsg = "Les Mots de passe ne sont pas correpondantes "

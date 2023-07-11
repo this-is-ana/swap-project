@@ -15,6 +15,8 @@ class Authentication {
     fun signIn(email: String, password: String) : FirebaseUser? {
         auth.signInWithEmailAndPassword(email, password)
 
+        Thread.sleep(1000)
+
         return auth.currentUser
     }
 
