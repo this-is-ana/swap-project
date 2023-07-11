@@ -87,7 +87,6 @@ fun NewAccountForm(navController: NavController) {
                         onClick = {
                             val user = User(
                                 email.value,
-                                password.value,
                                 firstName.value,
                                 lastName.value,
                                 phone.value,
@@ -96,6 +95,8 @@ fun NewAccountForm(navController: NavController) {
                             DatabaseHelper().createUser(user)
 
                             Authentication().createAccount(email.value, password.value)
+
+                            Thread.sleep(1000)
 
                             navController.navigate("userSession")
                         },

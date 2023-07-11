@@ -1,6 +1,5 @@
 package edu.anayika.swapproject.composables
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,8 +30,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.foundation.Image
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import coil.compose.rememberImagePainter
 import edu.anayika.swapproject.R
+import edu.anayika.swapproject.data.DatabaseHelper
+import edu.anayika.swapproject.data.User
+import edu.anayika.swapproject.data.UserType
+import edu.anayika.swapproject.models.Authentication
 
 
 @Composable
@@ -113,6 +118,27 @@ fun CircularContainer(imageResource: Int, onClick: () -> Unit) {
 
 @Composable
 fun UserSessionMainColumn(navController: NavController) {
+    val email = Authentication().getCurrentUser()?.email!!
+    val firstName = remember { mutableStateOf("") }
+    val lastName = remember { mutableStateOf("") }
+    lateinit var user: User
+
+    Thread.sleep(1000)
+
+    DatabaseHelper().readUser(email).addOnSuccessListener { results ->
+        for(result in results) {
+            user = User(
+                result.data["email"].toString(),
+                result.data["firstName"].toString(),
+                result.data["lastName"].toString(),
+                result.data["phone"].toString(),
+                UserType.REGULAR)
+
+            firstName.value = user.firstName
+            lastName.value = user.lastName
+        }
+    }
+
     Surface(modifier = Modifier
             ){
         Box(modifier = Modifier
@@ -122,12 +148,11 @@ fun UserSessionMainColumn(navController: NavController) {
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(16.dp),
-                text = "Bienvenue \"User\"!",
+                text = "Bienvenue ${firstName.value} ${lastName.value} !",
                 style = androidx.compose.material.MaterialTheme.typography.subtitle2,
                 color = MaterialTheme.colorScheme.primary) }
     }
 }
-
 
 @Composable
 fun LeftSideColumnBar(navController: NavController){

@@ -1,6 +1,9 @@
 package edu.anayika.swapproject.data
 
+import android.util.Log
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -16,14 +19,8 @@ class DatabaseHelper {
 
     fun readUsers() {}
 
-    fun readUser(email: String) : DocumentSnapshot? {
-        var response = db.collection(collectionUsers).document(email).get()
-
-        return if(response.isSuccessful) {
-            response.result
-        } else {
-            null
-        }
+    fun readUser(email: String): Task<QuerySnapshot> {
+        return db.collection(collectionUsers).whereEqualTo("email", email).get()
     }
 
     fun deleteUser() {}
