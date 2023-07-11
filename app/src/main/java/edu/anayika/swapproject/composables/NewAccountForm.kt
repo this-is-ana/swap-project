@@ -29,7 +29,7 @@ import edu.anayika.swapproject.data.User
 import edu.anayika.swapproject.data.UserType
 import edu.anayika.swapproject.models.Authentication
 
-import edu.anayika.swapproject.utils.isUserInputsValid
+import edu.anayika.swapproject.utils.isValidEmail
 import edu.anayika.swapproject.utils.showErrorMessage
 
 
@@ -118,7 +118,7 @@ fun NewAccountForm(navController: NavController) {
 }
 
 fun createUser(userInputs: User, navController: NavController, context: Context, password: String) {
-    if(isUserInputsValid(userInputs, navController, context)){
+    if(isValidEmail(userInputs.email, navController, context)){
             val user = User(
                 userInputs.email,
                 userInputs.firstName,

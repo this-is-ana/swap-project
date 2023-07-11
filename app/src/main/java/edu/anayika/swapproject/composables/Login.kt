@@ -142,7 +142,7 @@ fun validateLoginInput(
 ) {
     var errMsg = "Courriel ou mot de passe invalide"
     if (currentUser != null) {
-        if (isValidEmail(email.value)) {
+        if (isValidEmail(email.value, navController, context)) {
             if (isValidPassword(password.value)) {
     //            if (password.value == currentUser.password) {
                     navController.navigate("userSession")

@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import edu.anayika.swapproject.R
 import edu.anayika.swapproject.data.CurrentActivity
 
@@ -124,7 +126,7 @@ fun DropdownItem(item: String, navController: NavController) {
             "Rechercher Chalets" -> navController.navigate("searchChalets")
             "Mes chalets favoris" -> navController.navigate("favoriteChalets")
             "Mes correspondances" -> navController.navigate("myCorrespondences")
-            "Quitter la Session" -> navController.navigate("logout")
+            "Quitter la Session" -> Firebase.auth.signOut()
             "Contactez-nous" -> navController.navigate("contactUs")
             else -> {
                 Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
