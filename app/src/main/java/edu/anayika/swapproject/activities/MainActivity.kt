@@ -33,7 +33,7 @@ fun MyApp() {
     val viewModel = UserProfileViewModel()
     val navController = rememberNavController()
     Surface(modifier = Modifier.fillMaxSize()) {
-        var currentUser = Authentication().getCurrentUser()
+        val currentUser = Authentication().getCurrentUser()
         var startDestination = "login"
 
         if(currentUser != null) {

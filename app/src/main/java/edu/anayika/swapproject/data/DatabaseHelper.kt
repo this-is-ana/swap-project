@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.navigation.NavController
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -12,9 +13,10 @@ import edu.anayika.swapproject.utils.showErrorMessage
 class DatabaseHelper {
     private val db = Firebase.firestore
     private val collectionUsers = "users"
+    private val collectionHouses = "houses"
 
     fun createUser(user: User, password: String, navController: NavController, context: Context) {
-        readUser(user.email)
+        readUserByEmail(user.email)
             .addOnSuccessListener { results ->
                 if(results.isEmpty) {
                     db.collection(collectionUsers).add(user).addOnSuccessListener {
@@ -29,18 +31,24 @@ class DatabaseHelper {
             }
     }
 
-    fun updateUser() {}
+    fun updateUser(user: User, docId: String) {
+        db.collection(collectionUsers).document(docId).set(user)
+    }
 
-    fun readUsers() {}
+    fun readUser(docId: String) : Task<DocumentSnapshot> {
+        return db.collection(collectionUsers).document(docId).get()
+    }
 
-    fun readUser(email: String): Task<QuerySnapshot> {
+    fun readUserByEmail(email: String): Task<QuerySnapshot> {
         return db.collection(collectionUsers).whereEqualTo("email", email).get()
     }
 
-    fun deleteUser() {}
+    fun deleteUser(docId: String) {
+        db.collection(collectionUsers).document(docId).delete()
+    }
 
-    fun createHouse(house: House) {
-        db.collection("houses").add(house)
+    fun createHouse(house: HashMap<String, Any>) {
+        db.collection(collectionHouses).add(house)
     }
 
     fun updateHouse() {}

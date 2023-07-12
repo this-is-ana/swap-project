@@ -45,7 +45,7 @@ fun UserProfileAccount (navController: NavController, viewModel: UserProfileView
         LazyColumn(modifier = Modifier.fillMaxHeight()) {
             item {
                 Text(
-                    text = "My Profile",
+                    text = "Mon Profil",
                     style = MaterialTheme.typography.h5,
                     color = androidx.compose.material3.MaterialTheme.colorScheme.primary,
                     modifier = Modifier.align(Alignment.Start),

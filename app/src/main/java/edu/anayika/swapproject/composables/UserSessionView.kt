@@ -125,7 +125,7 @@ fun UserSessionMainColumn(navController: NavController) {
 
     Thread.sleep(1000)
 
-    DatabaseHelper().readUser(email).addOnSuccessListener { results ->
+    DatabaseHelper().readUserByEmail(email).addOnSuccessListener { results ->
         for(result in results) {
             user = User(
                 result.data["email"].toString(),
