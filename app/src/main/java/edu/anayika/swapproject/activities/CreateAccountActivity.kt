@@ -25,7 +25,7 @@ class CreateAccountActivity: ComponentActivity() {
         setContent {
             SwapProjectTheme {
                 val navController = rememberNavController()
-                AppNavHost(navController = navController, viewModel = viewModel)
+                AppNavHost(navController = navController, startDestination = "login", viewModel = viewModel)
             }
         }
     }

@@ -30,6 +30,7 @@ import edu.anayika.swapproject.data.UserType
 import edu.anayika.swapproject.models.Authentication
 
 import edu.anayika.swapproject.utils.isValidEmail
+import edu.anayika.swapproject.utils.isValidPassword
 import edu.anayika.swapproject.utils.showErrorMessage
 
 
@@ -93,16 +94,16 @@ fun NewAccountForm(navController: NavController) {
                     Button(
                         onClick = {
                             if(password.value == passwordConfirmation.value){
-                            val userInputs = User(
-                                email.value,
-                                firstName.value,
-                                lastName.value,
-                                phone.value,
-                                UserType.REGULAR)
+                                val userInputs = User(
+                                    email.value,
+                                    firstName.value,
+                                    lastName.value,
+                                    phone.value,
+                                    UserType.REGULAR)
 
                                 createUser(userInputs, navController, context, password.value)
                             } else {
-                                errMsg = "Les Mots de passe ne sont pas correpondantes "
+                                errMsg = "Les mots de passe ne sont pas correpondants"
                                 showErrorMessage(errMsg, context)
                             }
                                   },
@@ -118,22 +119,10 @@ fun NewAccountForm(navController: NavController) {
 }
 
 fun createUser(userInputs: User, navController: NavController, context: Context, password: String) {
-    if(isValidEmail(userInputs.email, navController, context)){
-            val user = User(
-                userInputs.email,
-                userInputs.firstName,
-                userInputs.lastName,
-                userInputs.phone,
-                UserType.REGULAR
-            )
-            DatabaseHelper().createUser(user)
-            Authentication().createAccount(user.email, password)
-
-            Thread.sleep(1000)
-
-            navController.navigate("userSession")
+    if(isValidEmail(userInputs.email) && isValidPassword(password)) {
+        DatabaseHelper().createUser(userInputs, password, navController, context)
     } else {
-        val errMsg = "Les Mots de passe ne sont pas correpondantes "
+        val errMsg = "Les mots de passe ne sont pas correpondants"
         showErrorMessage(errMsg, context)
     }
 }
