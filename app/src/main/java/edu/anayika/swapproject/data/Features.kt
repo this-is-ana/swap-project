@@ -1,10 +1,10 @@
 package edu.anayika.swapproject.data
 
-class Features (
-    fishing: Boolean,
-    waterfront: Boolean,
-    waterAccess: Boolean,
-    woodedArea: Boolean,
-    smokersAllowed: Boolean,
-    petsAllowed: Boolean
+class Features(
+    var fishing: Boolean,
+    var waterfront: Boolean,
+    var waterAccess: Boolean,
+    var woodedArea: Boolean,
+    var smokersAllowed: Boolean,
+    var petsAllowed: Boolean
 )

@@ -43,7 +43,7 @@ fun UserProfileView(
 
     Thread.sleep(1000)
 
-    DatabaseHelper().readUser(currentUserEmail).addOnSuccessListener { results ->
+    DatabaseHelper().readUserByEmail(currentUserEmail).addOnSuccessListener { results ->
         for(result in results) {
             user = User(
                 result.data["email"].toString(),
@@ -72,10 +72,10 @@ fun UserProfileView(
                         .padding(16.dp)
                         .fillMaxHeight()
                 ) {
-                    Text(text = "Name: ${firstName.value} ${lastName.value}")
-                    Text(text = "Email: ${email.value}")
-                    Text(text = "Phone: ${phone.value}")
-                    Text(text = "User Type: ${userType.value}")
+                    Text(text = "Nom: ${firstName.value} ${lastName.value}")
+                    Text(text = "Courriel: ${email.value}")
+                    Text(text = "Téléphone: ${phone.value}")
+                    Text(text = "Abonnement: ${userType.value}")
                     //REPLACE: Text(text = "Address: ${it.address1}, ${it.address2}")
                     //Text(text = "City: Montreal, Province: Quebec")
                     //REPLACE: Text(text = "City: ${it.city}, Province: ${it.province}")
@@ -87,14 +87,14 @@ fun UserProfileView(
                         onClick = { navController.navigate("addNewChalet")/* Handle login logic here */ }
                     ) {
                         Text(
-                            text = "Add a new chalet",
+                            text = "Ajouter un chalet",
                             color = androidx.compose.material3.MaterialTheme.colorScheme.onTertiary,
                             style = MaterialTheme.typography.h6
                         ) }
                 }
-                    }
-                }
-            }
+        }
+    }
+}
 
 @Preview(name = "UserProfileView")
 @Composable
