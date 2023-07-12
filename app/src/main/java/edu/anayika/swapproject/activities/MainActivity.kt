@@ -10,13 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import edu.anayika.swapproject.models.UserProfileViewModel
 import edu.anayika.swapproject.composables.AppNavHost
+import edu.anayika.swapproject.models.Authentication
 import edu.anayika.swapproject.ui.theme.SwapProjectTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -33,8 +33,15 @@ fun MyApp() {
     val viewModel = UserProfileViewModel()
     val navController = rememberNavController()
     Surface(modifier = Modifier.fillMaxSize()) {
+        var currentUser = Authentication().getCurrentUser()
+        var startDestination = "login"
+
+        if(currentUser != null) {
+            startDestination = "userSession"
+        }
+
         Column(modifier = Modifier.fillMaxSize()) {
-            AppNavHost(navController = navController, viewModel = viewModel)
+            AppNavHost(navController = navController, startDestination, viewModel = viewModel)
         }
     }
 }

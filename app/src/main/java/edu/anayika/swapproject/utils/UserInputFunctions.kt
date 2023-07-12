@@ -45,11 +45,11 @@ fun isValidPassword(password: String): Boolean {
     return password.length >= 6
 }
 
-fun isValidEmail(email: String, navController: NavController, context: Context): Boolean {
+fun isValidEmail(email: String): Boolean {
     val emailRegex = Regex("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}")
     return emailRegex.matches(email)
 }
 
 fun showErrorMessage(errMsg: String, context: Context) {
-    Toast.makeText(context, errMsg, Toast.LENGTH_SHORT).show()
+    Toast.makeText(context, errMsg, Toast.LENGTH_LONG).show()
 }

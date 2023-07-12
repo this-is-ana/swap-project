@@ -126,7 +126,7 @@ fun DropdownItem(item: String, navController: NavController) {
             "Rechercher Chalets" -> navController.navigate("searchChalets")
             "Mes chalets favoris" -> navController.navigate("favoriteChalets")
             "Mes correspondances" -> navController.navigate("myCorrespondences")
-            "Quitter la Session" -> Firebase.auth.signOut()
+            "Quitter la Session" -> signOut(navController)
             "Contactez-nous" -> navController.navigate("contactUs")
             else -> {
                 Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
@@ -140,6 +140,12 @@ fun DropdownItem(item: String, navController: NavController) {
             modifier = Modifier.padding(8.dp)
         )
     }
+}
+
+fun signOut(navController: NavController) {
+    Firebase.auth.signOut()
+
+    navController.navigate("login")
 }
 
 @Composable
