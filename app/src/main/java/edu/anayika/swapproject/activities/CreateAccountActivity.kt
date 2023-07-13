@@ -17,6 +17,7 @@ import edu.anayika.swapproject.composables.AppTopBar
 import edu.anayika.swapproject.data.CurrentActivity
 import edu.anayika.swapproject.composables.NewAccountForm
 import edu.anayika.swapproject.ui.theme.SwapProjectTheme
+import kotlin.math.log
 
 class CreateAccountActivity: ComponentActivity() {
     private val viewModel = UserProfileViewModel()
@@ -33,6 +34,7 @@ class CreateAccountActivity: ComponentActivity() {
 @Composable
 fun CreateAccount(navController: NavController) {
     val context = LocalContext.current
+    println("context" + context)
     Column(modifier = Modifier.fillMaxSize()) {
         AppTopBar(navController = navController, showBackButton = true, currentActivity = CurrentActivity.CreateAccountActivity)
         NewAccountForm(navController = navController)

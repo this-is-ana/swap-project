@@ -1,16 +1,16 @@
 package edu.anayika.swapproject.data
 
 class Amenities(
-    bedroomsQty: Int,
-    bedsQty: Int,
-    washroomsQty: Int,
-    balcony: Boolean,
-    spa: Boolean,
-    piscine: Boolean,
-    fireplace: Boolean,
-    internet: Boolean,
-    television: Boolean,
-    climatisation : Boolean,
-    bbq: Boolean,
-    logsChalet: Boolean
+    var bedroomsQty: Int,
+    var bedsQty: Int,
+    var washroomsQty: Int,
+    var balcony: Boolean,
+    var spa: Boolean,
+    var piscine: Boolean,
+    var fireplace: Boolean,
+    var internet: Boolean,
+    var television: Boolean,
+    var climatisation: Boolean,
+    var bbq: Boolean,
+    var logsChalet: Boolean
 )
