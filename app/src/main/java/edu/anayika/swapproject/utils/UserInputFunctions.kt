@@ -13,8 +13,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.SoftwareKeyboardController
-import androidx.navigation.NavController
-import edu.anayika.swapproject.data.User
+import edu.anayika.swapproject.data.House
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -52,4 +51,19 @@ fun isValidEmail(email: String): Boolean {
 
 fun showErrorMessage(errMsg: String, context: Context) {
     Toast.makeText(context, errMsg, Toast.LENGTH_LONG).show()
+}
+
+fun isValidChaletUserInputs(chaletUserInputs: House): Boolean {
+    return chaletUserInputs.address.address1.isNotBlank() &&
+            chaletUserInputs.address.city.isNotBlank() &&
+            chaletUserInputs.address.province.isNotBlank() &&
+            chaletUserInputs.address.postalCode.isNotBlank() &&
+            chaletUserInputs.address.country.isNotBlank() &&
+            chaletUserInputs.amenities.bedroomsQty > 0 &&
+            chaletUserInputs.amenities.bedsQty > 0 &&
+            chaletUserInputs.amenities.washroomsQty > 0 &&
+            chaletUserInputs.capacity > 0 &&
+            chaletUserInputs.description.isNotBlank() &&
+            chaletUserInputs.mainImage.isNotBlank() &&
+            chaletUserInputs.images.isNotEmpty()
 }

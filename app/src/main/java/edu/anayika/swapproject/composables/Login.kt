@@ -1,6 +1,7 @@
 package edu.anayika.swapproject.composables
 
 import android.content.Context
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,17 +10,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material3.Surface
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
@@ -29,15 +35,18 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+
 import com.google.firebase.auth.FirebaseUser
+
 import edu.anayika.swapproject.data.CurrentActivity
 import edu.anayika.swapproject.models.Authentication
+import edu.anayika.swapproject.utils.ClickOutsideToDismissKeyboard
 import edu.anayika.swapproject.utils.isValidEmail
 import edu.anayika.swapproject.utils.isValidPassword
 import edu.anayika.swapproject.utils.showErrorMessage
-
 
 @Composable
 fun Login(navController: NavController) {
@@ -47,6 +56,8 @@ fun Login(navController: NavController) {
         LoginForm(navController = navController)
     }
 }
+
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginForm(navController: NavController) {
     val context = LocalContext.current
@@ -63,24 +74,26 @@ fun LoginForm(navController: NavController) {
         ) {
             Text(
                 text = "Sign in",
-                style = MaterialTheme.typography.h5,
-                color = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                style = typography.h5,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.align(Alignment.Start),
             )
             Spacer(modifier = Modifier.height(8.dp))
+            ClickOutsideToDismissKeyboard {
             OutlinedTextField(
                 value = email.value,
                 onValueChange = { email.value = it },
                 label = { Text("Email") },
                 modifier = Modifier.fillMaxWidth()
-            )
+            )}
             Spacer(modifier = Modifier.height(8.dp))
+            ClickOutsideToDismissKeyboard {
             OutlinedTextField(
                 value = password.value,
                 onValueChange = { password.value = it },
                 label = { Text("Password") },
                 modifier = Modifier.fillMaxWidth()
-            )
+            )}
             Spacer(modifier = Modifier.height(16.dp))
             Surface(
                 modifier = Modifier
@@ -89,7 +102,7 @@ fun LoginForm(navController: NavController) {
             ) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.primary),
                     onClick = {
                         val currentUser = Authentication().signIn(email.value, password.value)
                         validateLoginInput(currentUser, context, navController, email, password)
@@ -97,8 +110,8 @@ fun LoginForm(navController: NavController) {
                         ) {
                     Text(
                         text = "Log in",
-                        color = androidx.compose.material3.MaterialTheme.colorScheme.onTertiary,
-                        style = MaterialTheme.typography.h6
+                        color = MaterialTheme.colorScheme.onTertiary,
+                        style = typography.h6
                     )
                 }
             }
@@ -114,8 +127,8 @@ fun LoginForm(navController: NavController) {
                         append("Reset password")
                     }
                 },
-                color = androidx.compose.material3.MaterialTheme.colorScheme.tertiary,
-                style = MaterialTheme.typography.h6,
+                color = MaterialTheme.colorScheme.tertiary,
+                style = typography.h6,
                 modifier = Modifier.clickable { /*resetPassword()*/ }
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -125,8 +138,8 @@ fun LoginForm(navController: NavController) {
                         append("Create a new account")
                     }
                 },
-                color = androidx.compose.material3.MaterialTheme.colorScheme.tertiary,
-                style = MaterialTheme.typography.h6,
+                color = MaterialTheme.colorScheme.tertiary,
+                style = typography.h6,
                 modifier = Modifier.clickable { navController.navigate("createAccount") }
             )
         }
@@ -161,7 +174,6 @@ fun validateLoginInput(
         showErrorMessage(errMsg, context)
     }
 }
-
 
 @Preview(name = "Login")
 @Composable

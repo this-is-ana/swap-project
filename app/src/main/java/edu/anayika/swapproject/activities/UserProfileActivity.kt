@@ -7,7 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.typography
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -46,8 +47,8 @@ fun UserProfileAccount (navController: NavController, viewModel: UserProfileView
             item {
                 Text(
                     text = "Mon Profil",
-                    style = MaterialTheme.typography.h5,
-                    color = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                    style = typography.h5,
+                    color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.align(Alignment.Start),
                 )
                 UserProfileView(navController = navController, viewModel = viewModel)
