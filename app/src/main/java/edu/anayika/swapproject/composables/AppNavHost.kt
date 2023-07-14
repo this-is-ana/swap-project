@@ -7,8 +7,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import edu.anayika.swapproject.activities.AccountChaletList
 import edu.anayika.swapproject.activities.AddNewChalet
 import edu.anayika.swapproject.activities.CreateAccount
+import edu.anayika.swapproject.activities.SearchChalets
 import edu.anayika.swapproject.activities.UserProfileAccount
 import edu.anayika.swapproject.models.UserProfileViewModel
 import edu.anayika.swapproject.activities.UserSession
@@ -22,8 +24,11 @@ fun AppNavHost(navController: NavHostController = rememberNavController(),
         startDestination = startDestination) {
         composable("login") { Login(navController) }
         composable("createAccount") { CreateAccount(navController) }
-        composable("userProfileAccount") { UserProfileAccount(navController, viewModel) }
         composable("userSession") { UserSession(navController) }
+        composable("userProfileAccount") { UserProfileAccount(navController, viewModel) }
+        composable("userChaletList") { AccountChaletList(navController) }
         composable("addNewChalet") { AddNewChalet(navController) }
+        composable("searchChalets") { SearchChalets(navController) }
+
     }
 }

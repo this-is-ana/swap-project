@@ -5,6 +5,8 @@ enum class CurrentActivity {
     CreateAccountActivity,
     NewChaletActivity,
     UserProfileActivity,
-    UserSectionActivity
+    UserSectionActivity,
+    userChaletListActivity,
+    SearchChaletsActivity
 }
 

@@ -4,9 +4,9 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED"/>
-    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -18,7 +18,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SwapProject"
         tools:targetApi="31">
-
+        <activity
+            android:name=".activities.SearchChaletsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_search_chalets"
+            android:theme="@style/Theme.SwapProject" />
+        <activity
+            android:name=".activities.userChaletListActivity"
+            android:exported="false"
+            android:label="@string/title_activity_user_chalet_list"
+            android:theme="@style/Theme.SwapProject" />
         <activity
             android:name=".newChaletActivity"
             android:exported="false"

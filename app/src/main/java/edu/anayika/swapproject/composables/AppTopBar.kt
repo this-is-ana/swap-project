@@ -82,10 +82,10 @@ fun getDropDownItems(currentActivity: CurrentActivity): List<String> {
         }
         else -> {
             listOf(
-                "Mon Profil",
-                "Rechercher Chalets",
-                "Mes chalets favoris",
-                "Mes correspondances",
+                //"Mon Profil",
+                //"Rechercher Chalets",
+                //"Mes chalets favoris",
+                //"Mes correspondances",
                 "Quitter la Session",
                 "Contactez-nous"
             )
@@ -127,10 +127,10 @@ fun DropdownItem(item: String, navController: NavController) {
     val context = LocalContext.current
     DropdownMenuItem(onClick = {
         when (item) {
-            "Mon Profil" -> navController.navigate("userProfileAccount")
-            "Rechercher Chalets" -> navController.navigate("searchChalets")
-            "Mes chalets favoris" -> navController.navigate("favoriteChalets")
-            "Mes correspondances" -> navController.navigate("myCorrespondences")
+           // "Mon Profil" -> navController.navigate("userProfileAccount")
+           // "Rechercher Chalets" -> navController.navigate("searchChalets")
+           // "Mes chalets favoris" -> navController.navigate("favoriteChalets")
+           // "Mes correspondances" -> navController.navigate("myCorrespondences")
             "Quitter la Session" -> signOut(navController)
             "Contactez-nous" -> navController.navigate("contactUs")
             else -> {
