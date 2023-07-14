@@ -25,7 +25,7 @@ class DatabaseHelper {
                         }
                     }
                 } else {
-                    val errMsg = "Ce courriel exite déjà. Veuillez vous connecter."
+                    val errMsg = "Ce courriel existe déjà. Veuillez vous connecter."
                     showErrorMessage(errMsg, context)
                 }
             }

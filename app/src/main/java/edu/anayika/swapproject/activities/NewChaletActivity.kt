@@ -3,8 +3,11 @@ package edu.anayika.swapproject.activities
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -33,8 +36,14 @@ class NewChaletActivity : ComponentActivity() {
 @Composable
 fun AddNewChalet(navController: NavController) {
     val context = LocalContext.current
-    AppTopBar(navController = navController, showBackButton = true, currentActivity = CurrentActivity.NewChaletActivity)
-    NewChaletForm(navController)
+    Column(modifier = Modifier.fillMaxSize()) {
+        AppTopBar(
+            navController = navController,
+            showBackButton = true,
+            currentActivity = CurrentActivity.NewChaletActivity
+        )
+        NewChaletForm(navController)
+    }
 }
 
 @Preview(showBackground = true)

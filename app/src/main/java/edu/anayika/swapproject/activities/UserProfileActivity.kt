@@ -6,15 +6,18 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -38,23 +41,28 @@ class UserProfileActivity : ComponentActivity() {
         }
     }
 }
+
 @Composable
-fun UserProfileAccount (navController: NavController, viewModel: UserProfileViewModel) {
+fun UserProfileAccount(navController: NavController, viewModel: UserProfileViewModel) {
     val context = LocalContext.current
     Column(modifier = Modifier.fillMaxSize()) {
-        AppTopBar(navController = navController, showBackButton = false, currentActivity = CurrentActivity.UserProfileActivity)
-        LazyColumn(modifier = Modifier.fillMaxHeight()) {
-            item {
+        AppTopBar(
+            navController = navController,
+            showBackButton = true,
+            currentActivity = CurrentActivity.UserProfileActivity
+        )
+
                 Text(
                     text = "Mon Profil",
                     style = typography.h5,
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.align(Alignment.Start),
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(16.dp),
                 )
                 UserProfileView(navController = navController, viewModel = viewModel)
-            }
-            //TODO: MyChaletsListView(navController = navController)
-        }
+
+
     }
 }
 

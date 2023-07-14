@@ -1,42 +1,62 @@
 package edu.anayika.swapproject.composables
 
 import android.content.Context
+import android.net.Uri
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme.typography
-import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material3.Card
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.shapes
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.sourceInformationMarkerStart
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.BrushPainter
+import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberImagePainter
 import edu.anayika.swapproject.data.Address
 import edu.anayika.swapproject.data.Amenities
 import edu.anayika.swapproject.data.DatabaseHelper
 import edu.anayika.swapproject.data.Features
 import edu.anayika.swapproject.data.House
 import edu.anayika.swapproject.data.HouseStatus
+import edu.anayika.swapproject.models.Authentication
 import edu.anayika.swapproject.utils.ClickOutsideToDismissKeyboard
 import edu.anayika.swapproject.utils.isValidChaletUserInputs
 import edu.anayika.swapproject.utils.showErrorMessage
-import edu.anayika.swapproject.models.Authentication
+import org.checkerframework.checker.units.qual.C
 
 @Composable
 fun NewChaletForm(navController: NavController) {
@@ -72,8 +92,9 @@ fun NewChaletForm(navController: NavController) {
     val images = remember { mutableStateOf("") }
     val status = remember { mutableStateOf(HouseStatus.AVAILABLE) }
 
+
     DatabaseHelper().readUserByEmail(currentUser?.email!!).addOnSuccessListener { results ->
-        for(result in results) {
+        for (result in results) {
             ownerId = result.id
         }
     }
@@ -88,23 +109,12 @@ fun NewChaletForm(navController: NavController) {
             Text(
                 text = "Ajouter nouveau chalet",
                 style = typography.h5,
-                color = MaterialTheme.colorScheme.primary,
+                color = colorScheme.primary,
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(18.dp))
             LazyColumn(modifier = Modifier.fillMaxHeight()) {
                 item {
                     Column {
-                        // House details
-                        Box(modifier = Modifier) {
-                            ChaletDetailsView(
-                                capacity = capacity,
-                                description = description,
-                                mainImage = mainImage,
-                                images = images,
-                                status = status
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(12.dp))
                         // House address
                         Box(modifier = Modifier) {
                             ChaletLocationView(
@@ -116,7 +126,19 @@ fun NewChaletForm(navController: NavController) {
                                 country = country
                             )
                         }
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(18.dp))
+                        // House details
+                        Box(modifier = Modifier) {
+                            ChaletDetailsView(
+                                capacity = capacity,
+                                description = description,
+                                mainImage = mainImage,
+                                images = images,
+                                status = status
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(18.dp))
+
                         // Amenities
                         Box(modifier = Modifier) {
                             ChaletAmenitiesView(
@@ -134,7 +156,7 @@ fun NewChaletForm(navController: NavController) {
                                 logsChalet = logsChalet
                             )
                         }
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(18.dp))
                         // Features
                         Box(modifier = Modifier) {
                             ChaletFeaturesView(
@@ -148,6 +170,7 @@ fun NewChaletForm(navController: NavController) {
                         }
 
                         Spacer(modifier = Modifier.height(12.dp))
+
                         // Buttons
                         Box(modifier = Modifier.fillMaxWidth()) {
                             // Buttons
@@ -264,7 +287,7 @@ fun NewChaletForm(navController: NavController) {
 fun createNewChalet(chalet: House, navController: NavController, context: Context) {
     val errMsg: String
 
-    val hashFeatures = hashMapOf<String, Any> (
+    val hashFeatures = hashMapOf<String, Any>(
         "fishing" to chalet.features.fishing,
         "waterfront" to chalet.features.waterfront,
         "waterAccess" to chalet.features.waterAccess,
@@ -334,90 +357,109 @@ fun ChaletAmenitiesView(
     Surface(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
-                text = "Installations",
-                textAlign = TextAlign.Center,
-                style =  typography.h6
+                text = "Installations", textAlign = TextAlign.Center, style = typography.h6
             )
             Column(modifier = Modifier.fillMaxWidth()) {
-                OutlinedTextField(
+                NumberTextFieldWithLabel(
                     value = bedroomsQty.value,
                     onValueChange = { bedroomsQty.value = it },
-                    label = { Text("Nombre de chambres", textAlign = TextAlign.End) },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                    label = "Nombre de chambres",
+
+                    )
                 Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
+                NumberTextFieldWithLabel(
                     value = bedsQty.value,
                     onValueChange = { bedsQty.value = it },
-                    label = { Text("Nombre de lits") },
-                    modifier = Modifier.fillMaxWidth()
+                    label = "Nombre de lits"
+
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
+                NumberTextFieldWithLabel(
                     value = washroomsQty.value,
                     onValueChange = { washroomsQty.value = it },
-                    label = { Text("Nombre de salles de bain") },
-                    modifier = Modifier.fillMaxWidth()
+                    label = "Nombre de salles de bain"
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(
-                    checked = balcony.value,
-                    onCheckedChange = { balcony.value = it },
-                )
-                Text("Balcon")
-                Checkbox(
-                    checked = spa.value,
-                    onCheckedChange = { spa.value = it },
-                )
-                Text("Spa")
-                Checkbox(
-                    checked = piscine.value,
-                    onCheckedChange = { piscine.value = it },
-                )
-                Text("Piscine")
-            }
+            OutlinedCard(
+                modifier = Modifier.fillMaxWidth()
+            ) {
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    Checkbox(
+                        checked = balcony.value,
+                        onCheckedChange = { balcony.value = it },
+                    )
+                    Text("Balcon")
+                    Checkbox(
+                        checked = spa.value,
+                        onCheckedChange = { spa.value = it },
+                    )
+                    Text("Spa")
+                    Checkbox(
+                        checked = piscine.value,
+                        onCheckedChange = { piscine.value = it },
+                    )
+                    Text("Piscine")
+                }
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(
-                    checked = fireplace.value,
-                    onCheckedChange = { fireplace.value = it },
-                )
-                Text("Foyer")
-                Checkbox(
-                    checked = internet.value,
-                    onCheckedChange = { internet.value = it },
-                )
-                Text("Internet")
-                Checkbox(
-                    checked = television.value,
-                    onCheckedChange = { television.value = it },
-                )
-                Text("Télévision")
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(
-                    checked = climatisation.value,
-                    onCheckedChange = { climatisation.value = it },
-                )
-                Text("Climatisation")
-                Checkbox(
-                    checked = bbq.value,
-                    onCheckedChange = { bbq.value = it },
-                )
-                Text("BBQ")
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(
-                    checked = logsChalet.value,
-                    onCheckedChange = { logsChalet.value = it },
-                )
-                Text("Chalet en bois rond")
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    Checkbox(
+                        checked = fireplace.value,
+                        onCheckedChange = { fireplace.value = it },
+                    )
+                    Text("Foyer")
+                    Checkbox(
+                        checked = internet.value,
+                        onCheckedChange = { internet.value = it },
+                    )
+                    Text("Internet")
+                    Checkbox(
+                        checked = television.value,
+                        onCheckedChange = { television.value = it },
+                    )
+                    Text("Télévision")
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    Checkbox(
+                        checked = climatisation.value,
+                        onCheckedChange = { climatisation.value = it },
+                    )
+                    Text("Climatisation")
+                    Checkbox(
+                        checked = bbq.value,
+                        onCheckedChange = { bbq.value = it },
+                    )
+                    Text("BBQ")
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    Checkbox(
+                        checked = logsChalet.value,
+                        onCheckedChange = { logsChalet.value = it },
+                    )
+                    Text("Chalet en bois rond")
+                }
+
             }
         }
     }
@@ -431,54 +473,112 @@ fun ChaletDetailsView(
     images: MutableState<String>,
     status: MutableState<HouseStatus>
 ) {
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
     Box(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "Caractéristiques",
-                textAlign = TextAlign.Center,
-                style = typography.h6
+                text = "Caractéristiques", textAlign = TextAlign.Center, style = typography.h6
             )
-            OutlinedTextField(
+            Spacer(modifier = Modifier.height(8.dp))
+            TextFieldWithLabel(label = "Description",
+                value = description.value,
+                onValueChange = { description.value = it })
+            Spacer(modifier = Modifier.height(8.dp))
+            NumberTextFieldWithLabel(
                 value = capacity.value,
                 onValueChange = { capacity.value = it },
-                label = { Text("Capacité") },
-                modifier = Modifier.fillMaxWidth()
+                label = "Nombre maximal de personnes"
             )
             Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(
-                value = description.value,
-                onValueChange = { description.value = it },
-                label = { Text("Description") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(
-                value = mainImage.value,
-                onValueChange = { mainImage.value = it },
-                label = { Text("Image principale") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(
-                value = images.value,
-                onValueChange = { images.value = it },
-                label = { Text("Images") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+
+                TextFieldWithImageButton(
+                    value = mainImage.value,
+                    onValueChange = { mainImage.value = it },
+                    label = "Image principale",
+                    selectedImageUri = selectedImageUri
+                ) { selectedImageUri = it }
+                Spacer(modifier = Modifier.height(8.dp))
+                TextFieldWithImageButton(
+                    value = images.value,
+                    onValueChange = { images.value = it },
+                    label = "Images additionnelles",
+                    selectedImageUri = selectedImageUri
+                ) { selectedImageUri = it }
+
+            Spacer(modifier = Modifier.height(16.dp))
             val statusOptions = listOf(HouseStatus.AVAILABLE, HouseStatus.NOT_AVAILABLE)
             val selectedStatus = remember { mutableStateOf(HouseStatus.AVAILABLE) }
             val isDropdownExpanded = remember { mutableStateOf(false) }
             ChaletStatusDropdownMenu(
-                statusOptions,
-                selectedStatus,
-                isDropdownExpanded
+                statusOptions, selectedStatus, isDropdownExpanded
             )
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
+
+@Composable
+fun TextFieldWithImageButton(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    selectedImageUri: Uri?,
+    onImageSelected: (Uri?) -> Unit,
+) {
+    var textValue by remember { mutableStateOf(value) }
+    val context = LocalContext.current
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TextField(value = textValue, onValueChange = {
+            textValue = it
+            onValueChange(it)
+        }, label = { Text(label) }, modifier = Modifier.weight(1f), shape = RoundedCornerShape(
+            bottomStart = 4.dp, topStart = 4.dp, topEnd = 0.dp, bottomEnd = 0.dp
+        )
+        )
+
+        Box(
+            modifier = Modifier
+                .sizeIn(minHeight = TextFieldDefaults.MinHeight)
+                .padding(0.dp)
+                .shadow(
+                    2.dp, shape = RoundedCornerShape(
+                        bottomStart = 0.dp, topStart = 0.dp, topEnd = 6.dp, bottomEnd = 6.dp
+                    )
+                )
+                .background(
+                    colorScheme.surfaceVariant, shape = RoundedCornerShape(
+                        bottomStart = 0.dp, topStart = 0.dp, topEnd = 6.dp, bottomEnd = 6.dp
+                    )
+                ),// Set the background color here
+            contentAlignment = Alignment.Center
+
+        ) {
+            IconButton(onClick = { /*selectImage(onImageSelected)*/ }) {
+                Icon(
+                    imageVector = Icons.Default.Folder,
+                    contentDescription = "Select Image",
+                    tint = colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+//fun selectImage(onImageSelected: (Uri?) -> Unit) {
+//    val launcher = rememberLauncherForActivityResult(
+//        contract = ActivityResultContracts.GetContent(),
+//        onResult = { uri: Uri? ->
+//            onImageSelected(uri)
+//        }
+//    )
+//    launcher.launch("image/*")
+//}
 
 @Composable
 fun ChaletFeaturesView(
@@ -493,55 +593,59 @@ fun ChaletFeaturesView(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
+
             Text(
-                text = "Atouts",
-                textAlign = TextAlign.Center,
-                style =  typography.h6
+                text = "Atouts", textAlign = TextAlign.Center, style = typography.h6
             )
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(
-                    checked = fishing.value,
-                    onCheckedChange = { fishing.value = it },
-                )
-                Text("Pêche")
-
-                Checkbox(
-                    checked = waterfront.value,
-                    onCheckedChange = { waterfront.value = it },
-                )
-                Text("Bord de l'eau")
-            }
             Spacer(modifier = Modifier.height(8.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(
-                    checked = waterAccess.value,
-                    onCheckedChange = { waterAccess.value = it },
-                )
-                Text("Accès à l'eau")
+            OutlinedCard(modifier = Modifier.fillMaxWidth()) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = fishing.value,
+                        onCheckedChange = { fishing.value = it },
+                    )
+                    Text("Pêche")
 
-                Checkbox(
-                    checked = woodedArea.value,
-                    onCheckedChange = { woodedArea.value = it },
-                )
-                Text("Zone boisée")
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(
-                    checked = smokersAllowed.value,
-                    onCheckedChange = { smokersAllowed.value = it },
-                )
-                Text("Fumeurs permis")
+                    Checkbox(
+                        checked = waterfront.value,
+                        onCheckedChange = { waterfront.value = it },
+                    )
+                    Text("Bord de l'eau")
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = waterAccess.value,
+                        onCheckedChange = { waterAccess.value = it },
+                    )
+                    Text("Accès à l'eau")
 
-                Checkbox(
-                    checked = petsAllowed.value,
-                    onCheckedChange = { petsAllowed.value = it },
-                )
-                Text("Animaux permis")
+                    Checkbox(
+                        checked = woodedArea.value,
+                        onCheckedChange = { woodedArea.value = it },
+                    )
+                    Text("Zone boisée")
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = smokersAllowed.value,
+                        onCheckedChange = { smokersAllowed.value = it },
+                    )
+                    Text("Fumeurs permis")
+
+                    Checkbox(
+                        checked = petsAllowed.value,
+                        onCheckedChange = { petsAllowed.value = it },
+                    )
+                    Text("Animaux permis")
+                }
             }
+
         }
     }
 }
+
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ChaletLocationView(
@@ -557,63 +661,51 @@ fun ChaletLocationView(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "Adresse",
-                textAlign = TextAlign.Center,
-                style = typography.h6
+                text = "Adresse", textAlign = TextAlign.Center, style = typography.h6
             )
             Spacer(modifier = Modifier.height(8.dp))
-                // Address
+            // Address
             ClickOutsideToDismissKeyboard {
-                OutlinedTextField(
+                TextFieldWithLabel(
                     value = address1.value,
                     onValueChange = { address1.value = it },
-                    label = { Text("Adresse 1") },
-                    modifier = Modifier.fillMaxWidth()
+                    label = "Adresse 1"
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
             ClickOutsideToDismissKeyboard {
-                OutlinedTextField(
+                TextFieldWithLabel(
                     value = address2.value,
                     onValueChange = { address2.value = it },
-                    label = { Text("Adresse 2") },
-                    modifier = Modifier.fillMaxWidth()
+                    label = "Adresse 2"
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
             ClickOutsideToDismissKeyboard {
-                OutlinedTextField(
-                    value = city.value,
-                    onValueChange = { city.value = it },
-                    label = { Text("Ville") },
-                    modifier = Modifier.fillMaxWidth()
+                TextFieldWithLabel(
+                    value = city.value, onValueChange = { city.value = it }, label = "Ville"
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
             ClickOutsideToDismissKeyboard {
-                OutlinedTextField(
+                TextFieldWithLabel(
                     value = province.value,
                     onValueChange = { province.value = it },
-                    label = { Text("Province") },
-                    modifier = Modifier.fillMaxWidth()
+                    label = "Province"
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
             ClickOutsideToDismissKeyboard {
-                OutlinedTextField(
+                TextFieldWithLabel(
                     value = postalCode.value,
                     onValueChange = { postalCode.value = it },
-                    label = { Text("Code postal") },
-                    modifier = Modifier.fillMaxWidth()
+                    label = "Code postal"
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
             ClickOutsideToDismissKeyboard {
-                OutlinedTextField(
-                    value = country.value,
-                    onValueChange = { country.value = it },
-                    label = { Text("Pays") },
-                    modifier = Modifier.fillMaxWidth()
+                TextFieldWithLabel(
+                    value = country.value, onValueChange = { country.value = it }, label = "Pays"
                 )
             }
         }
@@ -628,26 +720,23 @@ fun ChaletStatusDropdownMenu(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = { expanded = false }
-    ) {
+    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
         Text(text = "Status")
         statusOptions.forEach { statusOption ->
-            DropdownMenuItem(
-                text = { Text(statusOption.name) },
-                onClick = {
-                    selectedStatus.value = statusOption
-                    isDropdownExpanded.value = false
-                }
-            )
+            DropdownMenuItem(text = { Text(statusOption.name) }, onClick = {
+                selectedStatus.value = statusOption
+                isDropdownExpanded.value = false
+            })
         }
     }
     Text(text = selectedStatus.value.name)
 }
+
 
 @Preview(name = "NewChaletForm")
 @Composable
 private fun PreviewNewChaletForm() {
     NewChaletForm(navController = rememberNavController())
 }
+
+
