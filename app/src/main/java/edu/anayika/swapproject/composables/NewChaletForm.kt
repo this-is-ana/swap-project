@@ -2,7 +2,6 @@ package edu.anayika.swapproject.composables
 
 import android.content.Context
 import android.net.Uri
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,15 +12,13 @@ import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material3.Card
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TextField
@@ -31,21 +28,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.sourceInformationMarkerStart
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.BrushPainter
-import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberImagePainter
 import edu.anayika.swapproject.data.Address
 import edu.anayika.swapproject.data.Amenities
 import edu.anayika.swapproject.data.DatabaseHelper
@@ -56,7 +49,6 @@ import edu.anayika.swapproject.models.Authentication
 import edu.anayika.swapproject.utils.ClickOutsideToDismissKeyboard
 import edu.anayika.swapproject.utils.isValidChaletUserInputs
 import edu.anayika.swapproject.utils.showErrorMessage
-import org.checkerframework.checker.units.qual.C
 
 @Composable
 fun NewChaletForm(navController: NavController) {
@@ -87,6 +79,8 @@ fun NewChaletForm(navController: NavController) {
     val smokersAllowed = remember { mutableStateOf(false) }
     val petsAllowed = remember { mutableStateOf(false) }
     val capacity = remember { mutableStateOf("") }
+    val title = remember { mutableStateOf("") }
+    val shortDescription = remember { mutableStateOf("") }
     val description = remember { mutableStateOf("") }
     val mainImage = remember { mutableStateOf("") }
     val images = remember { mutableStateOf("") }
@@ -131,6 +125,8 @@ fun NewChaletForm(navController: NavController) {
                         Box(modifier = Modifier) {
                             ChaletDetailsView(
                                 capacity = capacity,
+                                title = title,
+                                shortDescription = shortDescription,
                                 description = description,
                                 mainImage = mainImage,
                                 images = images,
@@ -215,6 +211,8 @@ fun NewChaletForm(navController: NavController) {
                                         smokersAllowed.value = false
                                         petsAllowed.value = false
                                         capacity.value = ""
+                                        title.value = ""
+                                        shortDescription.value = ""
                                         description.value = ""
                                         mainImage.value = ""
                                         images.value = ""
@@ -261,6 +259,8 @@ fun NewChaletForm(navController: NavController) {
                                             capacity = capacity.value.toIntOrNull() ?: 0,
                                             features = features,
                                             amenities = amenities,
+                                            title.value,
+                                            shortDescription.value,
                                             description = description.value,
                                             mainImage = mainImage.value,
                                             images = images.value.split(",").toTypedArray(),
@@ -321,6 +321,8 @@ fun createNewChalet(chalet: House, navController: NavController, context: Contex
         "capacity" to chalet.capacity,
         "features" to hashFeatures,
         "amenities" to hashAmenities,
+        "title" to chalet.title,
+        "shortDescription" to chalet.shortDescription,
         "description" to chalet.description,
         "mainImage" to chalet.mainImage,
         "images" to {},
@@ -471,7 +473,9 @@ fun ChaletDetailsView(
     description: MutableState<String>,
     mainImage: MutableState<String>,
     images: MutableState<String>,
-    status: MutableState<HouseStatus>
+    status: MutableState<HouseStatus>,
+    title: MutableState<String>,
+    shortDescription: MutableState<String>
 ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -482,10 +486,23 @@ fun ChaletDetailsView(
             Text(
                 text = "Caractéristiques", textAlign = TextAlign.Center, style = typography.h6
             )
+            TextFieldWithLabel(
+                label = "Titre",
+                value = title.value,
+                onValueChange = { title.value = it }
+            )
             Spacer(modifier = Modifier.height(8.dp))
-            TextFieldWithLabel(label = "Description",
+            TextFieldWithLabel(
+                label = "Description en quelques mots...",
+                value = shortDescription.value,
+                onValueChange = { shortDescription.value = it }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            TextFieldWithLabel(
+                label = "Description",
                 value = description.value,
-                onValueChange = { description.value = it })
+                onValueChange = { description.value = it }
+            )
             Spacer(modifier = Modifier.height(8.dp))
             NumberTextFieldWithLabel(
                 value = capacity.value,
@@ -493,32 +510,96 @@ fun ChaletDetailsView(
                 label = "Nombre maximal de personnes"
             )
             Spacer(modifier = Modifier.height(8.dp))
-
-                TextFieldWithImageButton(
-                    value = mainImage.value,
-                    onValueChange = { mainImage.value = it },
-                    label = "Image principale",
-                    selectedImageUri = selectedImageUri
-                ) { selectedImageUri = it }
-                Spacer(modifier = Modifier.height(8.dp))
-                TextFieldWithImageButton(
-                    value = images.value,
-                    onValueChange = { images.value = it },
-                    label = "Images additionnelles",
-                    selectedImageUri = selectedImageUri
-                ) { selectedImageUri = it }
+            TextFieldWithImageButton(
+                value = mainImage.value,
+                onValueChange = { mainImage.value = it },
+                label = "Image principale",
+                selectedImageUri = selectedImageUri
+            ) { selectedImageUri = it }
+            Spacer(modifier = Modifier.height(8.dp))
+            TextFieldWithImageButton(
+                value = images.value,
+                onValueChange = { images.value = it },
+                label = "Images additionnelles",
+                selectedImageUri = selectedImageUri
+            ) { selectedImageUri = it }
 
             Spacer(modifier = Modifier.height(16.dp))
             val statusOptions = listOf(HouseStatus.AVAILABLE, HouseStatus.NOT_AVAILABLE)
             val selectedStatus = remember { mutableStateOf(HouseStatus.AVAILABLE) }
-            val isDropdownExpanded = remember { mutableStateOf(false) }
             ChaletStatusDropdownMenu(
-                statusOptions, selectedStatus, isDropdownExpanded
+                statusOptions = statusOptions,
+                selectedStatus = selectedStatus
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
+
+@Composable
+fun ChaletStatusDropdownMenu(
+    statusOptions: List<HouseStatus>,
+    selectedStatus: MutableState<HouseStatus>
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val optionsList = listOf("Disponible", "Non disponible")
+
+    Box {
+        Button(
+            onClick = { expanded = !expanded },
+            modifier = Modifier.background(Color.White)
+        ) {
+            Text("Status") // Provide the desired text here
+            Icon(
+                imageVector = Icons.Filled.ArrowDropDown,
+                contentDescription = null
+            )
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            optionsList.forEach { option ->
+                DropdownMenuItem(text = option, onClick = {
+                    if (option == "Disponible") {
+                        selectedStatus.value = HouseStatus.AVAILABLE
+                    } else {
+                        selectedStatus.value = HouseStatus.NOT_AVAILABLE
+                    }
+                    expanded = false
+                })
+            }
+        }
+    }
+}
+
+fun DropdownMenuItem(text: String, onClick: () -> Unit) {
+
+}
+
+
+/*
+@Composable
+fun ChaletStatusDropdownMenu(
+    statusOptions: List<HouseStatus>,
+    selectedStatus: MutableState<HouseStatus>,
+    isDropdownExpanded: MutableState<Boolean>
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        Text(text = "Status")
+        statusOptions.forEach { statusOption ->
+            DropdownMenuItem(text = { Text(statusOption.name) }, onClick = {
+                selectedStatus.value = statusOption
+                isDropdownExpanded.value = false
+            })
+        }
+    }
+    Text(text = selectedStatus.value.name)
+}
+*/
+
 
 @Composable
 fun TextFieldWithImageButton(
@@ -541,7 +622,6 @@ fun TextFieldWithImageButton(
             bottomStart = 4.dp, topStart = 4.dp, topEnd = 0.dp, bottomEnd = 0.dp
         )
         )
-
         Box(
             modifier = Modifier
                 .sizeIn(minHeight = TextFieldDefaults.MinHeight)
@@ -710,26 +790,6 @@ fun ChaletLocationView(
             }
         }
     }
-}
-
-@Composable
-fun ChaletStatusDropdownMenu(
-    statusOptions: List<HouseStatus>,
-    selectedStatus: MutableState<HouseStatus>,
-    isDropdownExpanded: MutableState<Boolean>
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-        Text(text = "Status")
-        statusOptions.forEach { statusOption ->
-            DropdownMenuItem(text = { Text(statusOption.name) }, onClick = {
-                selectedStatus.value = statusOption
-                isDropdownExpanded.value = false
-            })
-        }
-    }
-    Text(text = selectedStatus.value.name)
 }
 
 

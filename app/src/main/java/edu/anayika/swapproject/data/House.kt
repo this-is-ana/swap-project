@@ -4,6 +4,8 @@ class House(
     var capacity: Int,
     var features: Features,
     var amenities: Amenities,
+    var title: String,
+    var shortDescription: String,
     var description: String,
     var mainImage: String,
     var images: Array<String>,
