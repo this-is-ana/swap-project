@@ -10,10 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -30,6 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -75,7 +78,7 @@ fun LoginForm(navController: NavController) {
             Text(
                 text = "Sign in",
                 style = typography.h5,
-                color = MaterialTheme.colorScheme.primary,
+                color = colorScheme.primary,
                 modifier = Modifier.align(Alignment.Start),
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -89,6 +92,8 @@ fun LoginForm(navController: NavController) {
             Spacer(modifier = Modifier.height(8.dp))
             ClickOutsideToDismissKeyboard {
             OutlinedTextField(
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                visualTransformation =  PasswordVisualTransformation(),
                 value = password.value,
                 onValueChange = { password.value = it },
                 label = { Text("Password") },
@@ -102,7 +107,6 @@ fun LoginForm(navController: NavController) {
             ) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.primary),
                     onClick = {
                         val currentUser = Authentication().signIn(email.value, password.value)
                         validateLoginInput(currentUser, context, navController, email, password)
@@ -110,7 +114,6 @@ fun LoginForm(navController: NavController) {
                         ) {
                     Text(
                         text = "Log in",
-                        color = MaterialTheme.colorScheme.onTertiary,
                         style = typography.h6
                     )
                 }
@@ -127,7 +130,7 @@ fun LoginForm(navController: NavController) {
                         append("Reset password")
                     }
                 },
-                color = MaterialTheme.colorScheme.tertiary,
+                color = colorScheme.tertiary,
                 style = typography.h6,
                 modifier = Modifier.clickable { /*resetPassword()*/ }
             )
@@ -138,7 +141,7 @@ fun LoginForm(navController: NavController) {
                         append("Create a new account")
                     }
                 },
-                color = MaterialTheme.colorScheme.tertiary,
+                color = colorScheme.tertiary,
                 style = typography.h6,
                 modifier = Modifier.clickable { navController.navigate("createAccount") }
             )
