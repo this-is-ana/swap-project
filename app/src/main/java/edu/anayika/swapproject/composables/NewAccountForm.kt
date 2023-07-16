@@ -6,29 +6,23 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.KeyboardOptions
 
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material3.Surface
-import androidx.compose.material.TextField
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -39,7 +33,6 @@ import edu.anayika.swapproject.data.DatabaseHelper
 import edu.anayika.swapproject.data.User
 import edu.anayika.swapproject.data.UserType
 
-import edu.anayika.swapproject.utils.ClickOutsideToDismissKeyboard
 import edu.anayika.swapproject.utils.isValidEmail
 import edu.anayika.swapproject.utils.isValidPassword
 import edu.anayika.swapproject.utils.showErrorMessage
@@ -63,43 +56,43 @@ fun NewAccountForm(navController: NavController) {
                 ) {
 
                     Text(
-                        text = "New Account",
+                        text = "Nouveau compte",
                         style = typography.h5,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.align(Alignment.Start),
                     )
                     TextFieldWithLabel(
-                        label = "Email",
+                        label = "Courriel",
                         value = email.value,
                         onValueChange = { email.value = it }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     PasswordTextFieldWithLabel(
-                        label = "Password",
+                        label = "Mot de passe",
                         value = password.value,
                         onValueChange = { password.value = it }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     PasswordTextFieldWithLabel(
-                        label = "Confirm Password",
+                        label = "Confirmer mot de passe",
                         value = passwordConfirmation.value,
                         onValueChange = { passwordConfirmation.value = it }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     TextFieldWithLabel(
-                        label = "First Name",
+                        label = "Prénom",
                         value = firstName.value,
                         onValueChange = { firstName.value = it }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     TextFieldWithLabel(
-                        label = "Last Name",
+                        label = "Nom de famille",
                         value = lastName.value,
                         onValueChange = { lastName.value = it }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     TextFieldWithLabel(
-                        label = "Phone",
+                        label = "Téléphone",
                         value = phone.value,
                         onValueChange = { phone.value = it }
                     )

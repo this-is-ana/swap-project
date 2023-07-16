@@ -9,6 +9,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import edu.anayika.swapproject.utils.showErrorMessage
+import kotlinx.coroutines.tasks.await
 
 class DatabaseHelper {
     private val db = Firebase.firestore
@@ -16,8 +17,8 @@ class DatabaseHelper {
     private val collectionHouses = "houses"
 
     fun createUser(user: User, password: String, navController: NavController, context: Context) {
-        readUserByEmail(user.email)
-            .addOnSuccessListener { results ->
+        readUserByEmail(user.email).addOnSuccessListener { results ->
+            if (results != null) {
                 if(results.isEmpty) {
                     db.collection(collectionUsers).add(user).addOnSuccessListener {
                         Firebase.auth.createUserWithEmailAndPassword(user.email, password).addOnSuccessListener {
@@ -29,6 +30,7 @@ class DatabaseHelper {
                     showErrorMessage(errMsg, context)
                 }
             }
+        }
     }
 
     fun updateUser(user: User, docId: String) {
@@ -47,15 +49,128 @@ class DatabaseHelper {
         db.collection(collectionUsers).document(docId).delete()
     }
 
-    fun createHouse(house: HashMap<String, Any>) {
-        db.collection(collectionHouses).add(house)
+    fun createHouse(house: HashMap<String, Any>, features: Features, amenities: Amenities, address: Address) {
+        db.collection(collectionHouses).add(house).addOnSuccessListener { result ->
+            db.collection(collectionHouses).document(result.id).collection("features").add(features)
+            db.collection(collectionHouses).document(result.id).collection("amenities").add(amenities)
+            db.collection(collectionHouses).document(result.id).collection("address").add(address)
+        }
     }
 
     fun updateHouse() {}
 
     fun readHouses() {}
 
-    fun readHouse() {}
+    fun readHouse() {
+
+    }
+
+    suspend fun readHousesByOwner(ownerId: String): ArrayList<House> {
+        val chalets = ArrayList<House>()
+
+        val documentSnapshots = db.collection(collectionHouses).whereEqualTo("ownerId", ownerId).get().await()
+
+        for (documentSnapshot in documentSnapshots.documents) {
+            val documentData = documentSnapshot.data!!
+            val chalet = House(
+                documentData["capacity"].toString().toInt(),
+                getFeatures(documentSnapshot),
+                getAmenities(documentSnapshot),
+                documentData["title"].toString(),
+                documentData["shortDescription"].toString(),
+                documentData["description"].toString(),
+                documentData["mainImage"].toString(),
+                documentData["images"].toString(),
+                enumValueOf(documentData["status"].toString()),
+                getAddress(documentSnapshot),
+                documentData["ownerId"].toString()
+            )
+
+            chalets.add(chalet)
+        }
+
+        return chalets
+    }
+
+    private suspend fun getAmenities(documentSnapshot: DocumentSnapshot) : Amenities {
+        lateinit var amenities: Amenities
+
+        val resAmenities = readSubCollection(documentSnapshot.id, "amenities")
+
+        if (resAmenities != null) {
+            for (amenitiesDoc in resAmenities.documents) {
+                val resultData = amenitiesDoc.data!!
+
+                amenities = Amenities(
+                    resultData["bedroomsQty"].toString().toInt(),
+                    resultData["bedsQty"].toString().toInt(),
+                    resultData["washroomsQty"].toString().toInt(),
+                    resultData["balcony"].toString().toBoolean(),
+                    resultData["spa"].toString().toBoolean(),
+                    resultData["piscine"].toString().toBoolean(),
+                    resultData["fireplace"].toString().toBoolean(),
+                    resultData["internet"].toString().toBoolean(),
+                    resultData["television"].toString().toBoolean(),
+                    resultData["climatisation"].toString().toBoolean(),
+                    resultData["bbq"].toString().toBoolean(),
+                    resultData["logsChalet"].toString().toBoolean()
+                )
+            }
+        }
+
+        return amenities
+    }
+
+    private suspend fun getFeatures(documentSnapshot: DocumentSnapshot) : Features {
+
+        lateinit var features: Features
+
+        val resFeatures = readSubCollection(documentSnapshot.id, "features")
+
+        if (resFeatures != null) {
+            for (featuresDoc in resFeatures.documents) {
+                val docData = featuresDoc.data!!
+
+                features = Features(
+                    docData["fishing"].toString().toBoolean(),
+                    docData["waterfront"].toString().toBoolean(),
+                    docData["waterAccess"].toString().toBoolean(),
+                    docData["woodedArea"].toString().toBoolean(),
+                    docData["smokersAllowed"].toString().toBoolean(),
+                    docData["petsAllowed"].toString().toBoolean()
+                )
+            }
+        }
+
+        return features
+    }
+
+    private suspend fun getAddress(documentSnapshot: DocumentSnapshot) : Address {
+        lateinit var address: Address
+
+        val resAddress = readSubCollection(documentSnapshot.id, "address")
+
+        if (resAddress != null) {
+            for (addressDoc in resAddress.documents) {
+                val docData = addressDoc.data!!
+
+                address = Address(
+                    docData["address1"].toString(),
+                    docData["address2"].toString(),
+                    docData["city"].toString(),
+                    docData["province"].toString(),
+                    docData["postalCode"].toString(),
+                    docData["country"].toString()
+                )
+            }
+        }
+
+        return address
+    }
+
+    private suspend fun readSubCollection(documentId: String, collectionName: String): QuerySnapshot? {
+        return db.collection(collectionHouses).document(documentId).collection(collectionName).get().await()
+    }
 
     fun deleteHouse() {}
 }
