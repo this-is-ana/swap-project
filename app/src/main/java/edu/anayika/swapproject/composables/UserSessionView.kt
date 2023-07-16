@@ -43,7 +43,6 @@ import edu.anayika.swapproject.data.User
 import edu.anayika.swapproject.data.UserType
 import edu.anayika.swapproject.models.Authentication
 
-
 @Composable
 fun UserSessionView(navController: NavController) {
     val context = LocalContext.current
@@ -63,8 +62,6 @@ fun UserSessionView(navController: NavController) {
             }
         }
 
-
-
 @Composable
 fun TopSessionBar(navController: NavController) {
     Surface(
@@ -83,8 +80,8 @@ fun TopSessionBar(navController: NavController) {
 
 @Composable
 fun TopSessionContainer(navController: NavController) {
-    val userProfileIcon = R.drawable.app_icon_no_bg
-    val houseUserListIcon = R.drawable.house_user_list_icon
+    val userProfileIcon = R.drawable.house_user_list_icon
+    val houseUserListIcon = R.drawable.app_icon_no_bg
     val addHouseIcon = R.drawable.add_house_icon
     val houseSearchIcon = R.drawable.house_search_icon
     Row(
@@ -93,12 +90,12 @@ fun TopSessionContainer(navController: NavController) {
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        CircularContainer(imageRessource = userProfileIcon) {
-            navController.navigate("userProfileAccount")
-        }
-        Spacer(modifier = Modifier.width(8.dp))
         CircularContainer(imageRessource = houseUserListIcon) {
             navController.navigate("userChaletList")
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        CircularContainer(imageRessource = userProfileIcon) {
+            navController.navigate("userProfileAccount")
         }
         Spacer(modifier = Modifier.width(8.dp))
         CircularContainer(imageRessource = addHouseIcon ) {
@@ -145,20 +142,23 @@ fun UserSessionMainSection(navController: NavController) {
 
     Thread.sleep(1000)
 
-    DatabaseHelper().readUserByEmail(email).addOnSuccessListener { results ->
-        for (result in results) {
-            user = User(
-                result.data["email"].toString(),
-                result.data["firstName"].toString(),
-                result.data["lastName"].toString(),
-                result.data["phone"].toString(),
-                UserType.REGULAR
-            )
+    DatabaseHelper().readUserByEmail(email).addOnSuccessListener { userData ->
+        if (userData != null) {
+            for (result in userData) {
+                user = User(
+                    result.data["email"].toString(),
+                    result.data["firstName"].toString(),
+                    result.data["lastName"].toString(),
+                    result.data["phone"].toString(),
+                    UserType.REGULAR
+                )
 
-            firstName.value = user.firstName
-            lastName.value = user.lastName
+                firstName.value = user.firstName
+                lastName.value = user.lastName
+            }
         }
     }
+
     Surface(
         modifier = Modifier
     ) {

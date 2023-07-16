@@ -4,14 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,18 +48,15 @@ fun UserProfileAccount(navController: NavController, viewModel: UserProfileViewM
             showBackButton = true,
             currentActivity = CurrentActivity.UserProfileActivity
         )
-
-                Text(
-                    text = "Mon Profil",
-                    style = typography.h5,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(16.dp),
-                )
-                UserProfileView(navController = navController, viewModel = viewModel)
-
-
+            Text(
+                text = "Mon Profil",
+                style = typography.h5,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(16.dp),
+            )
+            UserProfileView(navController = navController, viewModel = viewModel)
     }
 }
 

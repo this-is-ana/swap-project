@@ -13,9 +13,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Folder
+//import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -86,10 +86,11 @@ fun NewChaletForm(navController: NavController) {
     val images = remember { mutableStateOf("") }
     val status = remember { mutableStateOf(HouseStatus.AVAILABLE) }
 
-
     DatabaseHelper().readUserByEmail(currentUser?.email!!).addOnSuccessListener { results ->
-        for (result in results) {
-            ownerId = result.id
+        if (results != null) {
+            for (result in results) {
+                ownerId = result.id
+            }
         }
     }
 
@@ -259,11 +260,12 @@ fun NewChaletForm(navController: NavController) {
                                             capacity = capacity.value.toIntOrNull() ?: 0,
                                             features = features,
                                             amenities = amenities,
-                                            title.value,
-                                            shortDescription.value,
+                                            title = title.value,
+                                            shortDescription = shortDescription.value,
                                             description = description.value,
                                             mainImage = mainImage.value,
-                                            images = images.value.split(",").toTypedArray(),
+                                            //images = images.value.split(",").toTypedArray(),
+                                            images = images.value,
                                             status = status.value,
                                             address = address,
                                             ownerId = ownerId
@@ -287,56 +289,27 @@ fun NewChaletForm(navController: NavController) {
 fun createNewChalet(chalet: House, navController: NavController, context: Context) {
     val errMsg: String
 
-    val hashFeatures = hashMapOf<String, Any>(
-        "fishing" to chalet.features.fishing,
-        "waterfront" to chalet.features.waterfront,
-        "waterAccess" to chalet.features.waterAccess,
-        "woodedArea" to chalet.features.woodedArea,
-        "smokersAllowed" to chalet.features.smokersAllowed,
-        "petsAllowed" to chalet.features.petsAllowed
-    )
-    val hashAmenities = hashMapOf<String, Any>(
-        "bedroomsQty" to chalet.amenities.bedroomsQty,
-        "bedsQty" to chalet.amenities.bedsQty,
-        "washroomsQty" to chalet.amenities.washroomsQty,
-        "balcony" to chalet.amenities.balcony,
-        "spa" to chalet.amenities.spa,
-        "piscine" to chalet.amenities.piscine,
-        "fireplace" to chalet.amenities.fireplace,
-        "internet" to chalet.amenities.internet,
-        "television" to chalet.amenities.television,
-        "climatisation" to chalet.amenities.climatisation,
-        "bbq" to chalet.amenities.bbq,
-        "logsChalet" to chalet.amenities.logsChalet
-    )
-    val hashAddress = hashMapOf<String, Any>(
-        "address1" to chalet.address.address1,
-        "address2" to chalet.address.address2,
-        "city" to chalet.address.city,
-        "province" to chalet.address.province,
-        "postalCode" to chalet.address.postalCode,
-        "country" to chalet.address.country
-    )
-    val hashHouse = hashMapOf(
+    val features = chalet.features
+    val amenities = chalet.amenities
+    val address = chalet.address
+
+    val hashHouse = hashMapOf<String, Any>(
         "capacity" to chalet.capacity,
-        "features" to hashFeatures,
-        "amenities" to hashAmenities,
         "title" to chalet.title,
         "shortDescription" to chalet.shortDescription,
         "description" to chalet.description,
         "mainImage" to chalet.mainImage,
-        "images" to {},
+        "images" to chalet.images,
         "status" to chalet.status,
-        "address" to hashAddress,
         "ownerId" to chalet.ownerId,
     )
 
     if (isValidChaletUserInputs(chalet)) {
-        DatabaseHelper().createHouse(hashHouse)
+        DatabaseHelper().createHouse(hashHouse, features, amenities, address)
 
         navController.navigate("userProfileAccount")
     } else {
-        errMsg = "Informations du chalet invalides"
+        errMsg = "Informations de chalet invalides"
         showErrorMessage(errMsg, context)
     }
 }
@@ -493,7 +466,7 @@ fun ChaletDetailsView(
             )
             Spacer(modifier = Modifier.height(8.dp))
             TextFieldWithLabel(
-                label = "Description en quelques mots...",
+                label = "Description en quelques mots",
                 value = shortDescription.value,
                 onValueChange = { shortDescription.value = it }
             )
@@ -641,7 +614,7 @@ fun TextFieldWithImageButton(
         ) {
             IconButton(onClick = { /*selectImage(onImageSelected)*/ }) {
                 Icon(
-                    imageVector = Icons.Default.Folder,
+                    imageVector = Icons.Default.Send,
                     contentDescription = "Select Image",
                     tint = colorScheme.onSurfaceVariant
                 )
