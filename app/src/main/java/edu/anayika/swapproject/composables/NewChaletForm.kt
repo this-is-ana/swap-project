@@ -466,7 +466,7 @@ fun ChaletDetailsView(
             )
             Spacer(modifier = Modifier.height(8.dp))
             TextFieldWithLabel(
-                label = "Description en quelques mots",
+                label = "Description courte",
                 value = shortDescription.value,
                 onValueChange = { shortDescription.value = it }
             )

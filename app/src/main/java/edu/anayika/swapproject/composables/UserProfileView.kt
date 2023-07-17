@@ -1,6 +1,7 @@
 package edu.anayika.swapproject.composables
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -88,7 +89,6 @@ fun UserProfileView(
     }
 
     Surface(modifier = Modifier.fillMaxSize()) {
-
         LazyColumn {
             item {
                 Column {
@@ -172,12 +172,37 @@ fun UserProfileView(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    Text(
-                        text = "Mes chalets",
-                        style = typography.h5,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(16.dp)
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Text(
+                            text = "Mes chalets",
+                            style = typography.h5,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+
+                        if(chalets.size == 0) {
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            Text(
+                                text = "Aucun chalet.",
+                                style = typography.body1
+                            )
+
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            Button(
+                                modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
+                                onClick = { navController.navigate("addNewChalet") }
+                            ) {
+                                Text(
+                                    text = "Ajouter un chalet"
+                                )
+                            }
+                        }
+                    }
                 }
             }
             items(chalets.size) { index ->
@@ -186,6 +211,9 @@ fun UserProfileView(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
+                            .clickable {
+                                navController.navigate("chaletSoloView/${chalets[index].documentId}")
+                            }
                     ) {
                         Column(
                             modifier = Modifier
@@ -198,8 +226,7 @@ fun UserProfileView(
 
                             Image(
                                 painter = rememberAsyncImagePainter(chalets[index].mainImage),
-
-                                contentDescription = null,
+                                contentDescription = chalets[index].title,
                                 modifier = Modifier.size(128.dp)
                             )
 

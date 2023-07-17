@@ -5,28 +5,23 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.anayika.swapproject.activities.ui.theme.SwapProjectTheme
 import edu.anayika.swapproject.composables.AppNavHost
 import edu.anayika.swapproject.composables.AppTopBar
-import edu.anayika.swapproject.composables.NewChaletForm
-import edu.anayika.swapproject.composables.UserChaletListView
+import edu.anayika.swapproject.composables.ChaletView
 import edu.anayika.swapproject.data.CurrentActivity
 import edu.anayika.swapproject.models.UserProfileViewModel
 
-class userChaletListActivity : ComponentActivity() {
+class ChaletDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
-           SwapProjectTheme {
+            SwapProjectTheme {
                 val navController = rememberNavController()
                 AppNavHost(navController = navController, viewModel = UserProfileViewModel())
             }
@@ -35,32 +30,14 @@ class userChaletListActivity : ComponentActivity() {
 }
 
 @Composable
-fun AccountChaletList(navController: NavController) {
-    val context = LocalContext.current
+fun ChaletDetails(navController: NavController, houseId: String) {
     Column(modifier = Modifier.fillMaxSize()) {
         AppTopBar(
             navController = navController,
             showBackButton = true,
-            currentActivity = CurrentActivity.userChaletListActivity
+            currentActivity = CurrentActivity.SearchChaletsActivity
         )
-        UserChaletListView(navController)
-    }
-}
 
-
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SwapProjectTheme {
-        Greeting("Android")
+        ChaletView(navController, houseId)
     }
 }
