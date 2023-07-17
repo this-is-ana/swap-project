@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,7 +47,7 @@ fun AccountChaletList(navController: NavController) {
 
         Text(
             text = "Chalets",
-            style = androidx.compose.material.MaterialTheme.typography.h5,
+            style = typography.h5,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
         )
@@ -57,18 +58,12 @@ fun AccountChaletList(navController: NavController) {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun AccountChaletListPreview() {
     SwapProjectTheme {
-        Greeting("Android")
+        AccountChaletList(navController = rememberNavController())
     }
 }

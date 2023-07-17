@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
@@ -26,14 +27,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
@@ -53,14 +49,18 @@ fun UserSessionView(navController: NavController) {
                     .fillMaxWidth()
                     .height(60.dp),
 
-            ) {
+                ) {
                 TopSessionBar(navController = navController)
             }
             Spacer(modifier = Modifier.height(1.dp))
-                    UserSessionMainSection(navController)
-                }
-            }
+            UserSessionTitleSection(navController)
+            Spacer(modifier = Modifier.height(8.dp))
+            UserSessionMainSection(navController)
+            Spacer(modifier = Modifier.height(8.dp))
+
         }
+    }
+}
 
 @Composable
 fun TopSessionBar(navController: NavController) {
@@ -80,29 +80,31 @@ fun TopSessionBar(navController: NavController) {
 
 @Composable
 fun TopSessionContainer(navController: NavController) {
-    val userProfileIcon = R.drawable.house_user_list_icon
-    val houseUserListIcon = R.drawable.app_icon_no_bg
+    val houseUserListIcon = R.drawable.house_user_list_icon
+
     val addHouseIcon = R.drawable.add_house_icon
     val houseSearchIcon = R.drawable.house_search_icon
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(4.dp),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
+     //    CircularContainer(imageRessource = houseUserListIcon) {
+     //       navController.navigate("userChaletList")
+     //    }
+         Spacer(modifier = Modifier.width(8.dp))
         CircularContainer(imageRessource = houseUserListIcon) {
-            navController.navigate("userChaletList")
-        }
-        Spacer(modifier = Modifier.width(8.dp))
-        CircularContainer(imageRessource = userProfileIcon) {
             navController.navigate("userProfileAccount")
         }
         Spacer(modifier = Modifier.width(8.dp))
-        CircularContainer(imageRessource = addHouseIcon ) {
+        CircularContainer(imageRessource = addHouseIcon) {
             navController.navigate("addNewChalet")
         }
         Spacer(modifier = Modifier.width(8.dp))
-        CircularContainer(imageRessource = houseSearchIcon
+        CircularContainer(
+            imageRessource = houseSearchIcon
         ) {
             navController.navigate("searchChalets")
         }
@@ -123,18 +125,18 @@ fun CircularContainer(imageRessource: Int, onClick: () -> Unit) {
             .padding(2.dp)
             .shadow(2.dp, CircleShape)
     ) {
-            Image(
-                painter = rememberAsyncImagePainter(imageRessource),
-                contentDescription = "icon${imageRessource}",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp)
-            )
+        Image(
+            painter = rememberAsyncImagePainter(imageRessource),
+            contentDescription = "icon${imageRessource}",
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+        )
     }
 }
 
 @Composable
-fun UserSessionMainSection(navController: NavController) {
+fun UserSessionTitleSection(navController: NavController) {
     val email = Authentication().getCurrentUser()?.email!!
     val firstName = remember { mutableStateOf("") }
     val lastName = remember { mutableStateOf("") }
@@ -159,61 +161,37 @@ fun UserSessionMainSection(navController: NavController) {
         }
     }
 
-    Surface(
-        modifier = Modifier
+    Column(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Box(
+        Text(
             modifier = Modifier
-
-                .fillMaxSize()
-        ) {
-            Text(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(16.dp),
-                text = "Bienvenue ${firstName.value} ${lastName.value} !",
-                style = androidx.compose.material.MaterialTheme.typography.subtitle2,
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
+                .align(alignment = Alignment.CenterHorizontally)
+                .padding(16.dp),
+            text = "Bienvenue ${firstName.value} ${lastName.value} !",
+            style = typography.subtitle2,
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 }
 
 @Composable
-fun LeftSideColumnBar(navController: NavController) {
-    Surface(
-        modifier = Modifier
-    ) {
-        Box(
-            modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.tertiaryContainer)
-                .fillMaxHeight()
+fun UserSessionMainSection(navController: NavController) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = "Chalets",
+            style = typography.h5,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
+        )
+        UserChaletListView(navController)
 
-        ) {
-            Text(
-                text = buildAnnotatedString {
-                    withStyle(
-                        SpanStyle(
-                            fontSize = 15.sp
-                        )
-                    ) {
-                        append("Left Side Column")
-                    }
-                },
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(8.dp),
-                style = androidx.compose.material.MaterialTheme.typography.subtitle2,
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
+
     }
-
 }
 
-
-@Preview(name = "UserSessionView")
-@Composable
-private fun PreviewUserSessionView() {
-    UserSessionView(navController = rememberNavController())
-}
+    @Preview(name = "UserSessionView")
+    @Composable
+    private fun PreviewUserSessionView() {
+        UserSessionView(navController = rememberNavController())
+    }
