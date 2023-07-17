@@ -7,6 +7,7 @@ enum class CurrentActivity {
     UserProfileActivity,
     UserSectionActivity,
     userChaletListActivity,
-    SearchChaletsActivity
+    SearchChaletsActivity,
+    ContactUsActivity
 }
 
