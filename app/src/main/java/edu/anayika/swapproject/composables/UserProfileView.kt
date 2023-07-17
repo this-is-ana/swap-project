@@ -12,13 +12,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Text
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,7 +32,6 @@ import edu.anayika.swapproject.data.House
 import edu.anayika.swapproject.data.User
 import edu.anayika.swapproject.models.Authentication
 import edu.anayika.swapproject.models.UserProfileViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun UserProfileView(
@@ -46,11 +46,7 @@ fun UserProfileView(
     val phone = remember { mutableStateOf("") }
     val userType = remember { mutableStateOf("") }
     val hidden = remember{ mutableStateOf(true) }
-    val title = remember { mutableStateOf("") }
-    val shortDescription = remember { mutableStateOf("") }
-    val mainImage = remember { mutableStateOf("") }
-    val chalets = remember { mutableStateOf(arrayOf(House())) }
-    val coroutineScope = rememberCoroutineScope()
+    val chalets = remember { mutableStateListOf<House>() }
     lateinit var user: User
     var userId = ""
 
@@ -82,17 +78,16 @@ fun UserProfileView(
         }
     }
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+    LaunchedEffect(Unit) {
+        val ownerId = DatabaseHelper().readUserIdByEmail(currentUserEmail)
+        val chaletsData = DatabaseHelper().readHousesByOwner(ownerId)
 
-        LaunchedEffect(Unit) {
-            val chaletsData = DatabaseHelper().readHousesByOwner(userId)
-
-            coroutineScope.launch {
-                for(chalet in chaletsData) {
-                    chalets.value += chalet
-                }
-            }
+        for(chalet in chaletsData) {
+            chalets.add(chalet)
         }
+    }
+
+    Surface(modifier = Modifier.fillMaxSize()) {
 
         LazyColumn {
             item {
@@ -176,14 +171,17 @@ fun UserProfileView(
                     }
 
                     Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = "Mes chalets",
+                        style = typography.h5,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
             }
-            items(chalets.value.size) { index ->
-                title.value = chalets.value[index].title
-                shortDescription.value = chalets.value[index].shortDescription
-                mainImage.value = chalets.value[index].mainImage
-
-                if(chalets.value.isNotEmpty()) {
+            items(chalets.size) { index ->
+                if(chalets.size > 0) {
                     OutlinedCard(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -194,19 +192,19 @@ fun UserProfileView(
                                 .padding(16.dp)
                         ) {
                             Text(
-                                text = title.value,
+                                text = chalets[index].title,
                                 style = typography.subtitle1
                             )
 
                             Image(
-                                painter = rememberAsyncImagePainter(mainImage.value),
+                                painter = rememberAsyncImagePainter(chalets[index].mainImage),
 
                                 contentDescription = null,
                                 modifier = Modifier.size(128.dp)
                             )
 
                             Text(
-                                text = shortDescription.value,
+                                text = chalets[index].shortDescription,
                                 style = typography.subtitle1
                             )
                         }

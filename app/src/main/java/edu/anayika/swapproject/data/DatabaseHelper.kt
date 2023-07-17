@@ -45,6 +45,17 @@ class DatabaseHelper {
         return db.collection(collectionUsers).whereEqualTo("email", email).get()
     }
 
+    suspend fun readUserIdByEmail(email: String): String {
+        val user = db.collection(collectionUsers).whereEqualTo("email", email).get().await()
+        var userId = ""
+
+        for(el in user) {
+            userId = el.id
+        }
+
+        return userId
+    }
+
     fun deleteUser(docId: String) {
         db.collection(collectionUsers).document(docId).delete()
     }
