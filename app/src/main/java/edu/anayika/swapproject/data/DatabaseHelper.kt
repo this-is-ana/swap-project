@@ -68,12 +68,51 @@ class DatabaseHelper {
         }
     }
 
-    fun updateHouse() {}
+    suspend fun readHouse(houseId: String): House {
+        val documentSnapshot = db.collection(collectionHouses).document(houseId).get().await()
+        val documentData = documentSnapshot.data!!
 
-    fun readHouses() {}
+        return House(
+            documentData["capacity"].toString().toInt(),
+            getFeatures(documentSnapshot),
+            getAmenities(documentSnapshot),
+            documentData["title"].toString(),
+            documentData["shortDescription"].toString(),
+            documentData["description"].toString(),
+            documentData["mainImage"].toString(),
+            documentData["images"].toString(),
+            enumValueOf(documentData["status"].toString()),
+            getAddress(documentSnapshot),
+            documentData["ownerId"].toString()
+        )
+    }
 
-    fun readHouse() {
+    suspend fun readHouses(ownerId: String): ArrayList<House> {
+        val chalets = ArrayList<House>()
+        val documentSnapshots = db.collection(collectionHouses).whereNotEqualTo("ownerId", ownerId).get().await()
 
+        for (documentSnapshot in documentSnapshots.documents) {
+            val documentData = documentSnapshot.data!!
+            val chalet = House(
+                documentData["capacity"].toString().toInt(),
+                getFeatures(documentSnapshot),
+                getAmenities(documentSnapshot),
+                documentData["title"].toString(),
+                documentData["shortDescription"].toString(),
+                documentData["description"].toString(),
+                documentData["mainImage"].toString(),
+                documentData["images"].toString(),
+                enumValueOf(documentData["status"].toString()),
+                getAddress(documentSnapshot),
+                documentData["ownerId"].toString()
+            )
+
+            chalet.documentId = documentSnapshot.id
+
+            chalets.add(chalet)
+        }
+
+        return chalets
     }
 
     suspend fun readHousesByOwner(ownerId: String): ArrayList<House> {
@@ -97,11 +136,17 @@ class DatabaseHelper {
                 documentData["ownerId"].toString()
             )
 
+            chalet.documentId = documentSnapshot.id
+
             chalets.add(chalet)
         }
 
         return chalets
     }
+
+    fun updateHouse() {}
+
+    fun deleteHouse() {}
 
     private suspend fun getAmenities(documentSnapshot: DocumentSnapshot) : Amenities {
         lateinit var amenities: Amenities
@@ -182,6 +227,4 @@ class DatabaseHelper {
     private suspend fun readSubCollection(documentId: String, collectionName: String): QuerySnapshot? {
         return db.collection(collectionHouses).document(documentId).collection(collectionName).get().await()
     }
-
-    fun deleteHouse() {}
 }

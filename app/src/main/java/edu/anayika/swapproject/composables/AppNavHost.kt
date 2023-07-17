@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import edu.anayika.swapproject.activities.AccountChaletList
 import edu.anayika.swapproject.activities.AddNewChalet
+import edu.anayika.swapproject.activities.ChaletDetails
 import edu.anayika.swapproject.activities.CreateAccount
 import edu.anayika.swapproject.activities.SearchChalets
 import edu.anayika.swapproject.activities.UserProfileAccount
@@ -29,6 +30,11 @@ fun AppNavHost(navController: NavHostController = rememberNavController(),
         composable("userChaletList") { AccountChaletList(navController) }
         composable("addNewChalet") { AddNewChalet(navController) }
         composable("searchChalets") { SearchChalets(navController) }
-
+        composable("chaletSoloView/{houseId}") {
+            val houseId = it.arguments?.getString("houseId")
+            if (houseId != null) {
+                ChaletDetails(navController, houseId = houseId)
+            }
+        }
     }
 }
