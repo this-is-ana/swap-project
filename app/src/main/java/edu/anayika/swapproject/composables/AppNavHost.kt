@@ -29,7 +29,7 @@ fun AppNavHost(navController: NavHostController = rememberNavController(),
         composable("createAccount") { CreateAccount(navController) }
         composable("userSession") { UserSession(navController) }
         composable("userProfileAccount") { UserProfileAccount(navController, viewModel) }
-        composable("userChaletList") { AccountChaletList(navController) }
+        //composable("userChaletList") { AccountChaletList(navController) }
         composable("addNewChalet") { AddNewChalet(navController) }
         composable("searchChalets") { SearchChalets(navController) }
         composable("contactUs") { ContactUs(navController) }

@@ -58,6 +58,7 @@ fun UserChaletListView(navController: NavController) {
                             .clickable {
                                 navController.navigate("chaletSoloView/${chalets[index].documentId}")
                             }
+
                     ) {
                         Column(
                             modifier = Modifier
@@ -65,13 +66,14 @@ fun UserChaletListView(navController: NavController) {
                         ) {
                             Text(
                                 text = chalets[index].title,
-                                style = typography.subtitle1
+                                style = typography.h6
                             )
 
                             Image(
                                 painter = rememberAsyncImagePainter(chalets[index].mainImage),
                                 contentDescription = chalets[index].title,
                                 modifier = Modifier.size(128.dp)
+
                             )
 
                             Text(
@@ -91,50 +93,6 @@ fun UserChaletListView(navController: NavController) {
 }
 
 
-/*
-@Composable
-fun ChaletCard(chalet: House) {
-    Card(
-        modifier = Modifier.fillMaxWidth().padding(8.dp),
-        elevation = 4.dp
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            // Left Image
-            Image(
-                painter = painterResource(chalet.imageResId), // Replace with actual image resource
-                contentDescription = null,
-                modifier = Modifier.size(80.dp).clip(shape = RoundedCornerShape(8.dp))
-            )
-
-            // Right Column
-            Column(modifier = Modifier.padding(start = 16.dp)) {
-                Text(text = chalet.name, style = typography.h6)
-                Text(text = "Chalet ${chalet.number}")
-                Text(text = "${chalet.city}, ${chalet.province}, ${chalet.country}")
-            }
-        }
-    }
-}
-*/
-
-@Composable
-fun NewChaletAddButton(navController: NavController) {
-    Box(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
-    ) {
-        Button(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            onClick = { navController.navigate("addNewChalet") }
-        ) {
-            Text(
-                text = "Ajouter un chalet",
-                style = typography.h6
-            )
-        }
-    }
-}
 @Preview(name = "MyChaletsListView")
 @Composable
 private fun PreviewMyChaletsListView() {
