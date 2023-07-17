@@ -13,6 +13,7 @@ import edu.anayika.swapproject.activities.ChaletDetails
 import edu.anayika.swapproject.activities.ContactUs
 import edu.anayika.swapproject.activities.CreateAccount
 import edu.anayika.swapproject.activities.SearchChalets
+import edu.anayika.swapproject.activities.UpdateChalet
 import edu.anayika.swapproject.activities.UserProfileAccount
 import edu.anayika.swapproject.models.UserProfileViewModel
 import edu.anayika.swapproject.activities.UserSession
@@ -36,6 +37,12 @@ fun AppNavHost(navController: NavHostController = rememberNavController(),
             val houseId = it.arguments?.getString("houseId")
             if (houseId != null) {
                 ChaletDetails(navController, houseId = houseId)
+            }
+        }
+        composable("updateChalet/{houseId}") {
+            val houseId = it.arguments?.getString("houseId")
+            if(houseId != null) {
+                UpdateChalet(navController, houseId = houseId)
             }
         }
     }

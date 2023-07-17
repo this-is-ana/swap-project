@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Button
 import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Surface
@@ -27,9 +28,11 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import edu.anayika.swapproject.data.DatabaseHelper
 import edu.anayika.swapproject.data.HouseStatus
+import edu.anayika.swapproject.models.Authentication
 
 @Composable
 fun ChaletView(navController: NavController, houseId: String) {
+    val currentUserEmail = Authentication().getCurrentUser()?.email!!
     val address1 = remember { mutableStateOf("") }
     val address2 = remember { mutableStateOf("") }
     val city = remember { mutableStateOf("") }
@@ -61,6 +64,17 @@ fun ChaletView(navController: NavController, houseId: String) {
     val mainImage = remember { mutableStateOf("") }
     val images = remember { mutableStateOf("") }
     val status = remember { mutableStateOf(HouseStatus.AVAILABLE) }
+    val ownerId = remember { mutableStateOf("") }
+    val userId = remember { mutableStateOf("") }
+
+    DatabaseHelper().readUserByEmail(currentUserEmail).addOnSuccessListener { results ->
+        if (results != null) {
+            for (result in results) {
+
+                userId.value = result.id
+            }
+        }
+    }
 
     LaunchedEffect(Unit) {
         val chaletData = DatabaseHelper().readHouse(houseId)
@@ -95,6 +109,7 @@ fun ChaletView(navController: NavController, houseId: String) {
         petsAllowed.value = chaletData.features.petsAllowed
         capacity.value = chaletData.capacity.toString()
         status.value = chaletData.status
+        ownerId.value = chaletData.ownerId
     }
 
     Surface(modifier = Modifier.fillMaxSize()) {
@@ -354,6 +369,23 @@ fun ChaletView(navController: NavController, houseId: String) {
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
+            }
+        }
+
+        if(ownerId.value != "") {
+            if(ownerId.value == userId.value) {
+                Box(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                ) {
+                    Button(
+                        modifier = Modifier.align(Alignment.BottomCenter),
+                        onClick = { navController.navigate("updateChalet/${houseId}") }
+                    ) {
+                        Text("Modifier")
+                    }
+                }
             }
         }
     }

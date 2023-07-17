@@ -24,6 +24,11 @@
             android:exported="false"
             android:label="@string/title_activity_contact_us"
             android:theme="@style/Theme.SwapProject" />
+
+        <activity
+            android:name=".activities.UpdateChaletActivity"
+            android:exported="false" />
+
         <activity
             android:name=".activities.ChaletDetailsActivity"
             android:exported="false" />

@@ -37,10 +37,6 @@ class DatabaseHelper {
         db.collection(collectionUsers).document(docId).set(user)
     }
 
-    fun readUser(docId: String) : Task<DocumentSnapshot> {
-        return db.collection(collectionUsers).document(docId).get()
-    }
-
     fun readUserByEmail(email: String): Task<QuerySnapshot> {
         return db.collection(collectionUsers).whereEqualTo("email", email).get()
     }
@@ -144,7 +140,39 @@ class DatabaseHelper {
         return chalets
     }
 
-    fun updateHouse() {}
+    fun updateHouse(house: HashMap<String, Any>, features: Features, amenities: Amenities, address: Address, docId: String) {
+
+        db.collection(collectionHouses).document(docId).set(house)
+
+        getSubCollection(docId, "features").addOnSuccessListener { resFeatures ->
+            var docIdFeatures = ""
+
+            for(res in resFeatures) {
+                docIdFeatures = res.id
+            }
+
+            db.collection(collectionHouses).document(docId).collection("features").document(docIdFeatures).set(features)
+        }
+
+        getSubCollection(docId, "amenities").addOnSuccessListener { resAmenities ->
+            var docIdAmenities = ""
+
+            for(res in resAmenities) {
+                docIdAmenities = res.id
+            }
+
+            db.collection(collectionHouses).document(docId).collection("amenities").document(docIdAmenities).set(amenities)
+        }
+
+        getSubCollection(docId, "address").addOnSuccessListener { resAddress ->
+            var docIdAddress = ""
+
+            for(res in resAddress) {
+                docIdAddress = res.id
+            }
+            db.collection(collectionHouses).document(docId).collection("address").document(docIdAddress).set(address)
+        }
+    }
 
     fun deleteHouse() {}
 
@@ -226,5 +254,9 @@ class DatabaseHelper {
 
     private suspend fun readSubCollection(documentId: String, collectionName: String): QuerySnapshot? {
         return db.collection(collectionHouses).document(documentId).collection(collectionName).get().await()
+    }
+
+    private fun getSubCollection(documentId: String, collectionName: String): Task<QuerySnapshot> {
+        return db.collection(collectionHouses).document(documentId).collection(collectionName).get()
     }
 }
